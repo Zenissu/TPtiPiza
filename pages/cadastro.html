@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de clientes</title>
+</head>
+
+<body>
+    <h1>Cadastro de Cliente</h1>
+
+    <form id="formClient">
+        <label for="nome">Nome:</label><input type="text" id="nome" required /><br>
+        <label for="telefone">Telefone:</label><input type="text" id="telefone" name="telefone" maxlength="14"
+            minlength="14" required /><br>
+        <label for="endereco">Endereco:</label><input type="text" id="endereco" name="endereco" required /><br><br>
+        <button type="submit"> Cadastrar </button>
+    </form>
+    <p id="mensagemTelefone"></p>
+    <p id="mensagem"></p>
+    <script>
+        document.getElementById("formClient").addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const nome = document.getElementById("nome").value;
+            const telefone = document.getElementById("telefone").value;
+            const endereco = document.getElementById("endereco").value;
+
+            //validar telefone
+            // Validar telefone (14 dígitos)
+            if (!/^\d{14}$/.test(telefone)) {
+                document.getElementById('mensagemTelefone').innerText = 'O telefone deve conter exatamente 14 números.';
+                return;
+            } else {
+                document.getElementById('mensagemTelefone').innerText = "";
+            }
+
+            try {
+                const resposta = await fetch('http://localhost:3000/clientes', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        nome,
+                        telefone,
+                        endereco
+                    })
+                });
+
+                const data = await resposta.json();
+
+                if (resposta.ok) {
+                    document.getElementById('mensagem').innerText = `Cliente cadastrado com sucesso! ID:${data.id}`;
+                    document.getElementById("formClient").reset();
+                } else {
+                    document.getElementById('mensagem').innerHTML = "Erro no cadastro do cliente.";
+                }
+            } catch (err) {
+                console.error(err);
+                document.getElementById('mensagem').innerHTML = "Erro ao comunicar com o servidor.";
+            }
+
+        });
+    </script>
+</body>
+
+</html>

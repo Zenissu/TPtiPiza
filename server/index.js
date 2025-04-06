@@ -10,8 +10,13 @@ app.use(express.json());// recebe json no corpo do html
 
 const db = mysql.createConnection({
     host: 'localhost',
+<<<<<<< HEAD
     user: 'root',
     password:'',
+=======
+    user: 'anderson',
+    password:'231231321',
+>>>>>>> 363218d (Commit de Anderson)
     database:'pizzaria'
 });
 
@@ -60,4 +65,23 @@ app.get('/clientes',(req,res)=>{
         }
         res.status(200).json(results);
     });
+<<<<<<< HEAD
+=======
+});
+
+// rota para cadastrar pizza
+app.post('/pizza', (req, res) => {
+    // 
+    const {codigo, nome, ingredientes, nome_da_imagem, preco, situacao} = req.body;
+    //  
+    const sql = 'INSERT INTO pizza(codigo, nome, ingredientes, nome_da_imagem, preco, situacao) VALUES (?, ?, ?, ?, ?, ?)';
+    //
+    db.query(sql, [codigo, nome, ingredientes, nome_da_imagem, preco, situacao], (err, result) => {
+        if(err){
+            console.eror('Erro ao cadastrar pizza', err);
+            return res.status(500).send("Erro ao inserir pizza");
+        }
+        res.status(201).json({mensagem: "Pizza cadastrada com sucesso!", codigo});
+    });
+>>>>>>> 363218d (Commit de Anderson)
 });

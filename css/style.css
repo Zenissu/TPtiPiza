@@ -4,29 +4,57 @@
     box-sizing: border-box;
   }
 
-.container {
+.containerForm {
+  background-color: dimgray;
+  width: 100%;
+  max-width: 700px;
+  height: 500px;
+  border-top-right-radius: 12px;
+  border-bottom-right-radius: 12px;
+}
+.containerOptions {
+  background-color: white;
     width: 100%;
-    max-width: 400px;
+    max-width: 200px;
     height: 500px;
+    border-top-left-radius: 12px;
+    border-bottom-left-radius: 12px;
+  }
+  
+  .containerTudo{
+  background-color: #f2f2f2;
+  max-width: px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 0;
+  flex-wrap: wrap;
+  border-radius: 12px;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+  
+}
+
+.containerOptions, .containerForm {
+  flex: 1;
 }
 
 body {
-    height: 100vh;
-    background-color: #f2f2f2;
-    font-family: Arial, sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  height: 100vh;
+  background-color: #f2f2f2;
+  font-family: Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  flex-wrap: wrap;
+  gap: 0;
   }
 
-.form {
+  .form {
     align-content: center;
-    background-color: white;
     padding: 50px;
-    border-radius: 12px;
     border-color: black;
-    
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 .form button:hover {
@@ -37,10 +65,21 @@ body {
 h1{
     text-align: center;
     font-size: 23pt;
+    color: white;
 }
 
+label{
+  color: white;
+}
+
+div>h1{
+  color: dimgray;
+  padding-top: 50px;
+}
+
+
 input, button {
-    margin: 5px auto; /* centraliza horizontalmente */
+    margin: auto; /* centraliza horizontalmente */
     display: block;
     border-radius: 6px;
     padding: 5px;
@@ -49,11 +88,31 @@ input, button {
 
 button{
     width: 60%;
-    background-color: dimgray;
-    color: #f2f2f2;
+    background-color: #f2f2f2;
+    color: black;
     font-weight: 700;
     cursor: pointer;
+  }
+  
+.btnOptions{
+  /* border-radius: 0; */
+    width: 100%;
+    margin: 0;
+    border-color: #ccc;
+    border-right: none;
+    border-left: none;
+    background-color: #f2f2f2;
+    color: black;
+
 }
+
+.sideoptions {
+  align-content: center;
+  background-color: white;
+  padding: 50px;
+}
+
+
 .btnVoltar{
     width: 60%;
     background-color: #f2f2f2;
@@ -66,3 +125,45 @@ input{
     width: 100%;
   }
 
+header{
+  background-color: #f2f2f2;
+  font-family: Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0;
+  margin: 0;
+}
+
+header>div{
+  padding: 20px;
+  text-align: center;
+  margin: 5px;
+  margin-top: 20px;
+  color: black;
+  box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.5);
+  border-radius: 12px;
+  cursor: pointer;
+
+}
+
+header>div>img{
+  width: 100px;
+  height: 100px;
+}
+
+.headerSelected{
+  background-color: dimgray;
+  color: white;
+  font-weight: bold;
+  box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.5);
+  
+}
+
+.no-border{
+  border: none;
+  box-shadow: none;
+}

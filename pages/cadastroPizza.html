@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<link rel="stylesheet" href="/css/style.css">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Pizza</title>
+</head>
+<body>
+     <!--Cadastro de Pizza-->
+     <h1>Cadastro de Pizza</h1>
+     <form id="formPizza">
+         <!--código-->
+         <label for="codigo">Código:</label>
+         <input type="text" id="codigo_pizza" name="id"><br><br>
+         <!--Nome-->
+         <label for="nome">Nome:</label>
+         <input type="text" id="nomePizza" nome="nomePizza"><br><br>
+         <!--Ingredientes-->
+         <label for="ingredientes">Ingredientes:</label> 
+         <input type="text" id="ingredientes" name="ingredientes"><br><br>
+         <!--nome da imagem-->
+         <label for="nomeDaImagem">Nome da imagem:</label>
+         <input type="text" id="nome_da_imagem" name="nome_da_imagem"><br><br>
+         <!--Preço-->
+         <label for="preco">Preço:</label>
+         <input type="number" id="preco" name="preco">
+         <!--Status-->
+         <label for="status">Status:</label>
+         <select id="situacao" name="situacao" required>
+             <option value="ativo">Ativo</option>
+             <option value="inativo">Inativo</option>
+         <!--Botão para cadastrar a pizza-->
+         <button type="submit">Cadastrar</button>
+     </form>
+     <!--Script do Cadastro de Pizza-->
+     <script>
+        document.getElementById("formPizza").addEventListener("submit", async (e) => {
+            e.preventDefault
+
+            const codigo = document.getElementById("codigo").value;
+            const nome = document.getElementById("nomePizza").value;
+            const ingredientes = document.getElementById("ingrediente").value;
+            const nomeDaImagem = document.getElementById("nome_da_imagem").value;
+            const preco = document.getElementById("preco").value;
+            const situacao = document.getElementById("situacao").value;
+
+            try{
+                const resp = await fetch("http://localhost:3000/pizzas", {
+                    method: "POST",
+                    headers:{
+                        "Contet-Type":"application/json"
+                    },
+                    body: JSON.stringify({
+                        codigo,
+                        nome,
+                        ingredientes,
+                        nomeDaImagem,
+                        preco,
+                        situacao
+                    })
+                });
+                const data = await resp.json();
+                if(resp.ok){
+                    alert("Pizza cadastrada com sucesso! Código: " + data.codigo);
+                    document.getElementById("formPizza").reset();
+                }else{
+                    alert("Erro ao cadastrar pizza.");
+                }
+            }catch(err){
+                console.log(err);
+                alert("Erro ao comunicar com o servidor.")
+            }
+        });
+     </script>
+</body>
+</html>

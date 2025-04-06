@@ -14,8 +14,8 @@ const db = mysql.createConnection({
     user: 'root',
     password:'',
 =======
-    user: 'anderson',
-    password:'231231321',
+    user: 'root',
+    password:'',
 >>>>>>> 363218d (Commit de Anderson)
     database:'pizzaria'
 });
@@ -77,6 +77,7 @@ app.post('/pizza', (req, res) => {
     const sql = 'INSERT INTO pizza(codigo, nome, ingredientes, nome_da_imagem, preco, situacao) VALUES (?, ?, ?, ?, ?, ?)';
     //
     db.query(sql, [codigo, nome, ingredientes, nome_da_imagem, preco, situacao], (err, result) => {
+
         if(err){
             console.eror('Erro ao cadastrar pizza', err);
             return res.status(500).send("Erro ao inserir pizza");

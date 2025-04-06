@@ -8,16 +8,13 @@ app.use(cors()); // inicia cors
 app.use(express.json());// recebe json no corpo do html
 
 
+const mysql = require('mysql');
+
 const db = mysql.createConnection({
     host: 'localhost',
-<<<<<<< HEAD
     user: 'root',
-    password:'',
-=======
-    user: 'root',
-    password:'',
->>>>>>> 363218d (Commit de Anderson)
-    database:'pizzaria'
+    password: '',
+    database: 'pizzaria'
 });
 
 db.connect(err=>{
@@ -65,8 +62,6 @@ app.get('/clientes',(req,res)=>{
         }
         res.status(200).json(results);
     });
-<<<<<<< HEAD
-=======
 });
 
 // rota para cadastrar pizza
@@ -84,5 +79,4 @@ app.post('/pizza', (req, res) => {
         }
         res.status(201).json({mensagem: "Pizza cadastrada com sucesso!", codigo});
     });
->>>>>>> 363218d (Commit de Anderson)
 });

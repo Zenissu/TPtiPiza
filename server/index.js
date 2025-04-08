@@ -9,8 +9,8 @@ app.use(express.json());// recebe json no corpo do html
 
 
 const db = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
+    host: '',
+    user: '',
     password:'',
     database:'pizzaria'
 });

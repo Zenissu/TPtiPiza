@@ -9,9 +9,9 @@ app.use(express.json());// recebe json no corpo do html
 
 
 const db = mysql.createConnection({
-    host: '',
-    user: '',
-    password:'',
+    host: 'localhost',
+    user: 'root',
+    password:'Oracl1ntodeJesus@512##@$12131dsaccasas',
     database:'pizzaria'
 });
 
@@ -61,3 +61,29 @@ app.get('/clientes',(req,res)=>{
         res.status(200).json(results);
     });
 });
+
+//Consulta cliente pelo id
+app.get('/clientes/:id',(req,res)=>{
+    const {id} = req.params;
+    const sql = 'SELECT * FROM cliente WHERE codigo=?';
+    db.query(sql,[id],(err,results)=>{
+        if(err) return res.status(500).send("Erro ao buscar cliente");
+        if(results.length === 0) return res.status(404).send('Cliente não encontrado!');
+        res.status(200).json(results[0]);
+    });
+});
+
+//Atualiza dados do cliente pelo id 
+app.put('/clientes/:id',(req,res)=>{
+    const {id} = req.params;
+    const {nome, telefone, endereco, situacao} = req.body;
+
+    const sql = 'UPDATE cliente SET nome=?, telefone=?, endereco=?, situacao=? WHERE codigo=?';
+    db.query(sql,[nome,telefone,endereco,situacao,id],(err,result)=>{
+        if(err){
+            console.error('Erro ao atualizar cliente:', err);
+            return res.status(500).send("Erro ao atualizar cliente");
+        }
+        res.status(200).send("Cliente atualizado com sucesso!")
+    })
+})

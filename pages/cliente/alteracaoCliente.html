@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alteração de dados do cliente</title>
+</head>
+
+<body>
+    <h1>Alteração de dados do cliente:</h1>
+    <!-- Verifica o cliente pelo codigo do mesmo-->
+    <label for="buscaCodigo">Código do cliente:</label></label>
+    <input type="text" id="buscaCodigo" placeholder="Escreva aqui o codigo do cliente" required /><br><br>
+    <button onclick='buscarCliente("codigo")'>Buscar via codigo</button><br><br>
+
+    <!-- Verifica pelo telefone do mesmo-->
+    <label for="buscaTelefone">Telefone do cliente:</label></label>
+    <input type="text" id="buscaTelefone" placeholder="Escreva aqui o telefone do cliente" maxlength="14" /><br><br>
+    <button onclick="buscarCliente('telefone')">Buscar via telefone</button><br><br>
+
+    <fieldset id="formClient" disabled>
+
+        <label for="codigo">Codigo:</label>
+        <input id="codigo" readonly/><br><br>
+
+        <label for="nome">Nome:</label>
+        <input type="text" id="nome" required><br><br>
+
+        <label for="telefone">Telefone:</label>
+        <input type="text" id="telefone" required><br><br>
+
+        <label for="endereco">Endereco:</label>
+        <input type="text" id="endereco" required><br><br>
+
+        <label for="situacao">situacao:</label>
+        <input type="checkbox" id="situacao"><br><br>
+
+        <button onclick="atualizarCliente()">Atualizar Cliente</button>
+    </fieldset>
+
+    <script>
+        //Preenche o formulario com dados do cliente 
+        function preencherFormulario(cliente) {
+            document.getElementById('formClient').disabled = false;
+            document.getElementById('codigo').value = cliente.codigo;
+            document.getElementById('nome').value = cliente.nome;
+            document.getElementById('telefone').value = cliente.telefone;
+            document.getElementById('endereco').value = cliente.endereco;
+            document.getElementById('situacao').checked = cliente.situacao;
+        }
+
+        function buscarCliente(tipo) {
+            const id = document.getElementById('buscaCodigo').value.trim();
+            const telefone = document.getElementById('buscaTelefone').value.trim();
+
+            if (tipo === 'codigo' && !id) return alert('Informe o código do cliente.');
+            if (tipo === 'telefone' && !telefone) return alert('Informe o telefone do cliente.');
+
+            //Busca cliente  pelo id e retorna dados do mesmo
+            fetch('http://localhost:3000/clientes/')
+                .then(res => res.json())
+                .then(data => {
+                    let cliente = null;
+                    if (tipo === 'codigo') {
+                        cliente = data.find(c => c.codigo == id);
+                    } else if (tipo === 'telefone') {
+                        cliente = data.find(c => c.telefone === telefone)
+                    }
+
+                    if (cliente) {
+                        preencherFormulario(cliente);
+                        alert('Cliente encontrado!');
+                    } else {
+                        alert('Cliente não encontrado!');
+                        document.getElementById('formClient').disabled = true;
+                    }
+                })
+                .catch(() => alert('Cliente não encontrado!'));
+        }
+
+        //Atualiza dados do cliente
+        function atualizarCliente() {
+            const id = document.getElementById('codigo').value;
+            const dados = {
+                nome: document.getElementById('nome').value,
+                telefone: document.getElementById('telefone').value,
+                endereco: document.getElementById('endereco').value,
+                situacao: document.getElementById('situacao').checked
+            };
+
+            fetch(`http://localhost:3000/clientes/${id}`, {
+                method: 'PUT',
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(dados)
+            })
+                .then(res => {
+                    if (res.ok) {
+                        alert('Cliente atualizado!');
+                    } else {
+                        alert('Erro ao atualizar cliente!');
+                    }
+                });
+        }
+    </script>
+</body>
+
+</html>

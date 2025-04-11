@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catálogo de Pizzas</title>
+</head>
+<body>
+    <h1>Catálogo de Pizzas</h1>
+    <div id="catalogo">
+        <!-- Os resultados aparecerão aqui -->
+    </div>
+
+    <script>
+        // Função para buscar e exibir os dados
+        fetch('/catalogo')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Erro ao buscar pizzas');
+                }
+                return response.json();
+            })
+            .then(data => {
+                const container = document.getElementById('catalogo');
+
+                data.forEach(pizza => {
+                    const div = document.createElement('div');
+                    div.style.marginBottom = "20px";
+
+                    div.innerHTML = `
+                        <strong>Pizza:</strong> ${pizza.pizza} <br/>
+                        <strong>Valor:</strong> R$ ${parseFloat(pizza.valor).toFixed(2)} <br/>
+                        <strong>Ingredientes:</strong> ${pizza.ingredientes} <br/>
+                    `;
+
+                    container.appendChild(div);
+                });
+            })
+            .catch(error => {
+                document.getElementById('catalogo').innerText = 'Erro ao carregar o catálogo.';
+                console.error(error);
+            });
+    </script>
+</body>
+</html>
+
+<!-- ${pizza.imagem ? `<img src="${pizza.imagem}" alt="${pizza.pizza}" width="150"/>` : ''}
+<hr/> -->

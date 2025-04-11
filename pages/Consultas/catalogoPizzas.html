@@ -13,33 +13,42 @@
 
     <script>
         // Função para buscar e exibir os dados
-        fetch('/catalogo')
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Erro ao buscar pizzas');
-                }
-                return response.json();
-            })
-            .then(data => {
-                const container = document.getElementById('catalogo');
+               fetch('/catalogo')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Erro ao buscar pizzas');
+            }
+            return response.json();
+        })
+        .then(data => {
+            const container = document.getElementById('catalogo');
 
-                data.forEach(pizza => {
-                    const div = document.createElement('div');
-                    div.style.marginBottom = "20px";
+            data.forEach(pizza => {
+                const div = document.createElement('div');
+                div.style.marginBottom = "20px";
 
-                    div.innerHTML = `
-                        <strong>Pizza:</strong> ${pizza.pizza} <br/>
-                        <strong>Valor:</strong> R$ ${parseFloat(pizza.valor).toFixed(2)} <br/>
-                        <strong>Ingredientes:</strong> ${pizza.ingredientes} <br/>
-                    `;
+                const ul = document.createElement('ul');
 
-                    container.appendChild(div);
-                });
-            })
-            .catch(error => {
-                document.getElementById('catalogo').innerText = 'Erro ao carregar o catálogo.';
-                console.error(error);
+                const nomeItem = document.createElement('li');
+                nomeItem.textContent = `Pizza: ${pizza.pizza}`;
+                ul.appendChild(nomeItem);
+
+                const valorItem = document.createElement('li');
+                valorItem.textContent = `Valor: R$ ${parseFloat(pizza.valor).toFixed(2)}`;
+                ul.appendChild(valorItem);
+
+                const ingredientesItem = document.createElement('li');
+                ingredientesItem.textContent = `Ingredientes: ${pizza.ingredientes}`;
+                ul.appendChild(ingredientesItem);
+
+                div.appendChild(ul);
+                container.appendChild(div);
             });
+        })
+        .catch(error => {
+            document.getElementById('catalogo').innerText = 'Erro ao carregar o catálogo.';
+            console.error(error);
+        });
     </script>
     <!-- //Listar catálogo de Pizzas
     app.get('/catalogo',(req,res)=>{

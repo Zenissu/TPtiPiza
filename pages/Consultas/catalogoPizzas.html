@@ -41,8 +41,16 @@
                 console.error(error);
             });
     </script>
+    <!-- //Listar catálogo de Pizzas
+    app.get('/catalogo',(req,res)=>{
+        const sql = "SELECT valor, pizza, ingredientes, imagem FROM pizzas where situacao = 'ativo'";
+        db.query(sql,(err,results) => {
+            if(err){
+                console.error('Erro ao buscar o Catálogo:',err);
+                return res.status(500).send("Erro ao buscar o Catálogo");
+            }
+            res.status(200).json(results);
+        });
+    }); -->
 </body>
 </html>
-
-<!-- ${pizza.imagem ? `<img src="${pizza.imagem}" alt="${pizza.pizza}" width="150"/>` : ''}
-<hr/> -->

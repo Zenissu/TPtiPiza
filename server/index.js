@@ -44,7 +44,54 @@ app.post('/clientes', (req, res) => {
         res.status(201).json({ id: result.insertId, nome, telefone, endereco, situacao });
     });
 });
+// #################################################################################################################
+// Rota para cadastrar pizzas - tabela pizzas
+app.post('/pizzas', (req, res) => {
+    console.log("Corpo da requisição:", req.body); // debug
 
+    const { codigo, nome, ingredientes, nome_da_imagem, preco, situacao } = req.body;
+
+    const sql = 'INSERT INTO pizzas (codigo, nome, ingredientes, nome_da_imagem, preco, situacao) VALUES (?,?,?,?,?,?)';
+
+    db.query(sql, [codigo, nome, ingredientes, nome_da_imagem, preco, situacao], (err, result) => {
+        if (err) {
+            console.error('Erro ao cadastrar pizza:', err);
+            return res.status(500).send("Erro ao inserir pizza");
+        }
+        res.status(201).json({ codigo, nome, ingredientes, nome_da_imagem, preco, situacao });
+    });
+});
+// #################################################################################################################
+// #################################################################################################################
+// rota para cadastrar o pedido
+app.post('/pedidos', (req, res) => {
+    // Criação da constante a partir do body
+    const {id_cliente, codigo_pizza, quantidade, situacao, valor_total, forma_de_pagamento, data_tempo} = req.body;
+    // Procurar o ID da pizza baseado no código
+    const sqlBuscaPizza = 'SELECT id FROM pizzas WHERE codigo = ?';
+    db.query(sqlBuscaPizza, [codigo_pizza], (err, results) => {
+        if(err){
+            console.error("Erro ao buscar pizza:", err);
+            return res.status(500).send("Erro ao buscar pizza.");
+        }
+        if(results.length === 0){
+            return res.status(404).send("Pizza não encontrada com esse código.");
+        }
+        const id_pizza = results[0].id;
+        // Fazendo o pedido, já com o id_pizza correto
+        const sqlPedido = 'INSERT INTO pedido (id_cliente, id_pizza, quantidade, situacao, valor_total, forma_de_pagamento, data_hora_da_entrega) VALUES (?,?,?,?,?,?,?)';
+        // Erro e Resultado
+        db.query(sqlPedido, [id_cliente, id_pizza, quantidade, situacao, valor_total, forma_de_pagamento, data_tempo], (err, result) =>{
+            if(err){
+                console.error("Erro ao inserir pedido: ", err);
+                return res.status(500).send("Erro ao cadastrar pedido");
+            }
+            // Sucesso
+            res.status(201).json({ id: result.insertId, id_cliente, id_pizza, quantidade, situacao, valor_total, forma_de_pagamento, data_tempo });
+        });
+    })
+});
+// #################################################################################################################
 const PORT = 3000;
 app.listen(PORT,()=>{
     console.log(`Servidor rodando em http://localhost:${PORT}`);

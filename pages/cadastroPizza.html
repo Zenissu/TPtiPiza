@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Pizza</title>
+</head>
+<body>
+    <!--Cadastro de Pizza-->
+    <h1>Cadastro de Pizza</h1>
+    <form id="formPizza">
+        <!--código-->
+        <label for="codigo">Código:</label>
+        <input type="text" id="id_pizza" name="id"><br><br>
+        <!--Nome-->
+        <label for="nome">Nome da pizza:</label>
+        <select id="nome_pizza" name="nome_pizza">
+            <option value="mussarela">Mussarela</option>
+            <option value="calabressa">Calabressa</option>
+            <option value="pepperoni">Pepperoni</option>
+            <option value="4queijos">Quatro queijos</option>
+            <option value="carneSeca">Carne Seca</option>
+            <option value="estrogonofre">Estrogonofre</option>
+            <option value="lomboCanadense">Lombo Canadense</option>
+            <option value="marguerita">Marguerita</option>
+            <option value="napolitana">Napolitana</option>
+            <option value="portuguesa">Portuguesa</option>
+        </select>
+        <!--Ingredientes-->
+        <label for="ingredientes">Ingredientes:</label> 
+        <input type="text" id="ingredientes" name="ingredientes"><br><br>
+        <!--nome da imagem-->
+        <div>
+            <img id="nome_da_imagem" src="" alt="Imagem da pizza" style="width: 200px; display: none;">
+        </div>
+        <!--Preço-->
+        <label for="preco">Preço:</label>
+        <input type="number" id="preco" name="preco">
+        <!--Status-->
+        <label for="status">Status:</label>
+        <select id="situacao" name="situacao" required>
+            <option value="ativo">Ativo</option>
+            <option value="inativo">Inativo</option>
+        </select>    
+        <!--Botão para cadastrar a pizza-->
+        <button type="submit">Cadastrar</button>
+    </form>
+    <!--Script do Cadastro de Pizza-->
+    <script>
+        const pizzaSelect = document.getElementById("nome_pizza");
+        const imagemPizza = document.getElementById("nome_da_imagem");
+        let pizzas = [];
+
+        // Carrega pizzas ao iniciar a página
+        window.onload = async () => {
+            try {
+                const res = await fetch("http://localhost:3000/pizzas");
+                pizzas = await res.json();
+                pizzaSelect.innerHTML = ""; // Limpas as opções antigas
+
+                pizzas.forEach(pizza => {
+                    const opt = document.createElement("option");
+                    opt.value = pizza.codigo;
+                    opt.textContent = pizza.nome;
+                    pizzaSelect.appendChild(opt);
+                });
+            } catch (err) {
+                alert("Erro ao carregar pizzas.");
+                console.log(err);
+            }
+        };
+
+        // Quando mudar a pizza, mostrar a imagem
+        pizzaSelect.addEventListener("change", () => {
+            const selecionada = pizzas.find(p => p.codigo == pizzaSelect.value);
+            if (selecionada && selecionada.nome_da_imagem) {
+                imagemPizza.src = `./imagens/${selecionada.nome_da_imagem}`;
+                imagemPizza.style.display = "block";
+            } else {
+                imagemPizza.style.display = "none";
+            }
+        });
+        // Formulário
+       document.getElementById("formPizza").addEventListener("submit", async (e) => {
+           e.preventDefault()
+
+           const codigo = document.getElementById("id_pizza").value;
+           const nome = document.getElementById("nome_pizza").value;
+           const ingredientes = document.getElementById("ingredientes").value;
+           const nome_da_imagem = imagemPizza.src.split("/").pop();
+           const preco = document.getElementById("preco").value;
+           const situacao = document.getElementById("situacao").value;
+
+           try{
+               const resp = await fetch("http://localhost:3000/pizzas", {
+                   method: "POST",
+                   headers:{
+                       "Content-Type": "application/json"
+                   },
+                   body: JSON.stringify({
+                       codigo,
+                       nome,
+                       ingredientes,
+                       nome_da_imagem,
+                       preco,
+                       situacao
+                   })
+               });
+               const data = await resp.json();
+               if(resp.ok){
+                   alert("Pizza cadastrada com sucesso! Código: " + data.codigo);
+                   document.getElementById("formPizza").reset();
+                   imagemPizza.style.display = "none";  // Esconde a imagem
+               }else{
+                   alert("Erro ao cadastrar pizza.");
+               }
+           }catch(err){
+               console.log(err);
+               alert("Erro ao comunicar com o servidor.")
+           }
+       });
+    </script>    
+</body>
+</html>

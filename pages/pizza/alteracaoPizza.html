@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alteração de dados da Pizza</title>
+</head>
+
+<body>
+    <h1>Alteração de dados da Pizza:</h1>
+
+    <!-- Verifica a pizza pelo código -->
+    <label for="buscaCodigo">Código da pizza:</label>
+    <input type="text" id="buscaCodigo" placeholder="Escreva aqui o código da pizza" required /><br><br>
+    <button onclick="buscarPizza()">Buscar Pizza</button><br><br>
+
+    <fieldset id="formPizza" disabled>
+
+        <label for="codigo">Código:</label>
+        <input id="codigo" readonly /><br><br>
+
+        <label for="nome">Nome:</label>
+        <input type="text" id="nome" required><br><br>
+
+        <label for="ingredientes">Ingredientes:</label>
+        <input type="text" id="ingredientes" required><br><br>
+
+        <label for="nome_da_imagem">Link da Imagem:</label>
+        <input type="text" id="nome_da_imagem" required><br><br>
+
+        <label for="preco">Preço:</label>
+        <input type="number" id="preco" step="0.01" required><br><br>
+
+        <label for="situacao">Situação:</label>
+        <input type="checkbox" id="situacao"> Ativa<br><br>
+
+        <button onclick="atualizarPizza()">Atualizar Pizza</button>
+    </fieldset>
+
+    <script>
+        function preencherFormulario(pizza) {
+            document.getElementById('formPizza').disabled = false;
+            document.getElementById('codigo').value = pizza.codigo;
+            document.getElementById('nome').value = pizza.nome;
+            document.getElementById('ingredientes').value = pizza.ingredientes;
+            document.getElementById('nome_da_imagem').value = pizza.nome_da_imagem;
+            document.getElementById('preco').value = pizza.preco;
+            document.getElementById('situacao').checked = pizza.situacao;
+        }
+
+        function buscarPizza() {
+            const id = document.getElementById('buscaCodigo').value.trim();
+
+            if (!id) {
+                return alert('Informe o código da pizza.');
+            }
+
+            fetch('http://localhost:3000/pizzas')
+                .then(res => res.json())
+                .then(data => {
+                    const pizza = data.find(p => p.codigo == id);
+
+                    if (pizza) {
+                        preencherFormulario(pizza);
+                        alert('Pizza encontrada!');
+                    } else {
+                        alert('Pizza não encontrada!');
+                        document.getElementById('formPizza').disabled = true;
+                    }
+                })
+                .catch(() => alert('Erro ao buscar pizza!'));
+        }
+
+        //Atualiza dados da Pizza
+        function atualizarPizza() {
+            const id = document.getElementById('codigo').value;
+            const dados = {
+                nome: document.getElementById('nome').value,
+                ingredientes: document.getElementById('ingredientes').value,
+                nome_da_imagem: document.getElementById('nome_da_imagem').value,
+                preco: parseFloat(document.getElementById('preco').value),
+                situacao: document.getElementById('situacao').checked
+            };
+
+            fetch(`http://localhost:3000/pizzas/${id}`, {
+                method: 'PUT',
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(dados)
+            })
+                .then(res => {
+                    if (res.ok) {
+                        alert('Pizza atualizada!');
+                    } else {
+                        alert('Erro ao atualizar pizza!');
+                    }
+                });
+        }
+    </script>
+</body>
+
+</html>

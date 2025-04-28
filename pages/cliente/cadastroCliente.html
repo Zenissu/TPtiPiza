@@ -29,7 +29,6 @@
             const telefone = document.getElementById("telefone").value;
             const endereco = document.getElementById("endereco").value;
 
-            //validar telefone
             // Validar telefone (14 dígitos)
             if (!/^\d{14}$/.test(telefone)) {
                 document.getElementById('mensagemTelefone').innerText = 'O telefone deve conter exatamente 14 números.';

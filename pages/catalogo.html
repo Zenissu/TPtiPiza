@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Catálogo de Pizzas</title>
+</head>
+<body>
+    <h1>Catálogo de Pizzas</h1>
+    <input type="text" id="search" placeholder="Buscar por nome...">
+
+    <div id="pizza-list"></div>
+
+    <script>
+        async function fetchPizzas() {
+            try {
+                const response = await fetch('http://localhost:3000/pizzas');
+                const pizzas = await response.json();
+                return pizzas;
+            } catch (error) {
+                console.error("Erro ao buscar pizzas:", error);
+                return [];
+            }
+        }
+
+        function renderPizzas(pizzas) {
+            const list = document.getElementById('pizza-list');
+            list.innerHTML = '';
+
+            if (pizzas.length === 0) {
+                list.innerHTML = '<p>Nenhuma pizza encontrada.</p>';
+                return;
+            }
+
+            pizzas.forEach(pizza => {
+                const card = document.createElement('div');
+                card.className = 'pizza-card';
+                card.innerHTML = `
+                    <h3>${pizza.nome}</h3>
+                    <p><strong>Ingredientes:</strong> ${pizza.ingredientes}</p>
+                    <p><strong>Preço:</strong> R$ ${parseFloat(pizza.preco).toFixed(2)}</p>
+                `;
+                list.appendChild(card);
+            });
+        }
+
+        document.getElementById('search').addEventListener('input', async (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            const pizzas = await fetchPizzas();
+            const filtered = pizzas.filter(p => p.nome.toLowerCase().includes(searchTerm));
+            renderPizzas(filtered);
+        });
+
+        fetchPizzas().then(renderPizzas);
+    </script>
+</body>
+</html>

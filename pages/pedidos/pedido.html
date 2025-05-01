@@ -1,79 +1,191 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pedidos</title>
+    <title>Pizzaria - Pedido</title>
 </head>
+
 <body>
-    <form id="formPedido">
-        <!--ID do cliente-->
-        <label for="id_cliente">ID do cliente:</label>
-        <input type="number" id="id_cliente" name="id_cliente" required>
-        <!--ID da pizza-->
-        <label for="id_pizza">ID da pizza:</label>
-        <input type="number" id="id_pizza" name="id_pizza" required>
-        <!--Quantidade-->
-        <label for="quantidade">Quantidade:</label>
-        <input type="number" id="quantidade" name="quantidade" required>
-        <!--Situação-->
-        <label for="situacao">Situação:</label>
-        <select id="situacao" name="situacao" required>
-            <option value="ativo">Ativo</option>
-            <option value="inativo">Inativo</option>
-        </select> 
-        <!--Valor Total (preço)-->
-        <label for="valor_total">Valor total:</label>
-        <input type="number" id="valor_total" name="valor_total">
-        <!--Forma de pagamento-->
-        <label for="forma_de_pagamento">Forma de pagamento:</label>
-        <input type="number" id="forma_de_pagamento" name="forma_de_pagamento">
-        <!--Data  hora da entrega-->
-        <label for="data_tempo">Data e hora da entrega:</label>
-        <input type="datetime-local" id="data_tempo" name="data_tempo">
-        <!--Botão-->
-        <button type="submit">Fazer pedido</button>
-        
-        <script>
-            document.getElementById("formPedido").addEventListener("submit", async(e) =>{
-                e.preventDefault();         // Impedirá o envio do formulário.
-                // Constantes
-                const id_cliente = document.getElementById("id_cliente").value;
-                const id_pizza = document.getElementById("id_pizza").value;
-                const quantidade = document.getElementById("quantidade").value;
-                const situacao = document.getElementById("situacao").value;
-                const valor_total = document.getElementById("valor_total").value;
-                const forma_de_pagamento = document.getElementById("forma_de_pagamento").value;
-                const data_tempo = document.getElementById("data_tempo").value;
-                // Try e Catch
-                try{
-                    const resp = await fetch("http://localhost:3000/pedidos", {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json"
-                        },
-                        body: JSON.stringify({
-                            id_cliente,
-                            id_pizza,
-                            quantidade,
-                            situacao,
-                            valor_total,
-                            forma_de_pagamento,
-                            data_tempo
-                        })
-                    });
-                    // Constante data (dado)
-                    const data = await resp.json();
-                    // condição
-                    if(resp.ok){
-                        alert("Pedido realizado com sucesso! ID do pedido: " + data.id);
-                    }
-                }catch(err){
-                    console.log(err);
-                    alert("Erro ao comunicar com o servidor.");
+    <div class="container">
+        <!-- Formulário de busca de cliente -->
+        <h2>Faça seu Pedido</h2>
+        <div class="busca-cliente">
+            <label for="cliente">Nome ou Telefone do Cliente</label>
+            <input type="text" id="cliente" placeholder="Digite nome ou telefone">
+            <button id="buscar-cliente">Buscar Cliente</button>
+        </div>
+
+        <!-- Se cliente for encontrado, mostra opções para selecionar pizzas -->
+        <div id="seleciona-pizzas" class="oculto">
+            <h3>Selecione as Pizzas</h3>
+            <ul id="lista-pizzas"></ul>
+
+            <!-- Lista de pizzas selecionadas -->
+            <h3>Pedido</h3>
+            <ul id="lista-pedido"></ul>
+            <p>Total: <span id="total-pedido">R$ 0,00</span></p>
+
+            <button id="finalizar-pedido">Finalizar Pedido</button>
+        </div>
+    </div>
+
+    <script>
+        let pizzasSelecionadas = [];
+        let total = 0;
+        let codigoCliente = null;
+
+        document.getElementById('buscar-cliente').addEventListener('click', buscarCliente);
+
+        // Função para buscar o cliente
+        async function buscarCliente() {
+            const clienteInput = document.getElementById('cliente').value;
+
+            if (!clienteInput) {
+                alert('Por favor, insira o nome ou telefone do cliente.');
+                return;
+            }
+
+            try {
+                const response = await fetch(`http://localhost:3000/clientes?nome=${clienteInput}&telefone=${clienteInput}`);
+                const clientes = await response.json();
+
+                if (clientes.length === 0) {
+                    alert('Cliente não encontrado. Verifique o nome ou telefone e tente novamente.');
+                } else {
+                    // Considera o primeiro cliente retornado
+                    codigoCliente = clientes[0].codigo;
+                    document.getElementById('seleciona-pizzas').classList.remove('oculto');
+                    carregarPizzas();
                 }
+            } catch (error) {
+                console.error('Erro ao buscar cliente:', error);
+                alert('Erro ao buscar cliente.');
+            }
+        }
+
+        // Função para carregar as pizzas
+        async function carregarPizzas() {
+            try {
+                const response = await fetch('http://localhost:3000/pizzas');
+                const pizzas = await response.json();
+
+                const listaPizzas = document.getElementById('lista-pizzas');
+                listaPizzas.innerHTML = '';
+
+                pizzas.forEach(pizza => {
+                    // Garantir que o preço é tratado como número
+                    const preco = parseFloat(pizza.preco);
+                    if (isNaN(preco)) {
+                        console.error('Preço inválido para a pizza:', pizza.nome);
+                        return; // Se o preço for inválido, ignora esta pizza
+                    }
+
+                    const li = document.createElement('li');
+                    li.classList.add('pizza-item');
+                    li.innerHTML = `
+                    <div>
+                        <strong>${pizza.nome}</strong> - <span class="preco">R$ ${preco.toFixed(2)}</span><br/>
+                        <img src="${pizza.nome_da_imagem}" alt="${pizza.nome}" class="pizza-imagem"/>
+                        <input type="number" min="1" value="1" id="quantidade-${pizza.codigo}" class="quantidade" />
+                        <button data-pizza-id="${pizza.codigo}" class="adicionar-pedido">Adicionar ao Pedido</button>
+                        </div>
+                                `;
+                    listaPizzas.appendChild(li);
+                });
+
+                // Adiciona evento para cada botão de adicionar
+                document.querySelectorAll('.adicionar-pedido').forEach(button => {
+                    button.addEventListener('click', adicionarPizza);
+                });
+            } catch (error) {
+                console.error('Erro ao carregar pizzas:', error);
+            }
+        }
+
+
+        function adicionarPizza(e) {
+            // Obtém o ID da pizza do atributo data-pizza-id no botão
+            const pizzaId = e.target.getAttribute('data-pizza-id');
+
+            // Obtém a quantidade do input específico da pizza
+            const quantidade = parseInt(document.getElementById(`quantidade-${pizzaId}`).value);
+
+            // Se a quantidade for menor ou igual a zero, exibe um alerta
+            if (quantidade <= 0) {
+                alert('Quantidade inválida!');
+                return;
+            }
+
+            // Obtém o nome da pizza e o preço (em formato correto)
+            const pizzaNome = e.target.parentElement.querySelector('strong').textContent;
+            const pizzaPreco = parseFloat(
+                e.target.parentElement.querySelector('.preco').textContent.replace('R$ ', '').replace(',', '.')
+            );
+            console.log('Preço da pizza:', pizzaPreco);
+
+            // Adiciona a pizza ao array de pizzas selecionadas 
+            pizzasSelecionadas.push({
+                codigo_pizza: pizzaId,
+                quantidade: quantidade
             });
-        </script>
-    </form>
+
+            // Atualiza o valor total
+            total += pizzaPreco * quantidade;
+            document.getElementById('total-pedido').textContent = `R$ ${total.toFixed(2)}`;
+
+            // Atualiza a lista de pedidos na tela
+            const pedidoItem = document.createElement('li');
+            pedidoItem.textContent = `${pizzaNome} - R$ ${pizzaPreco.toFixed(2)} x ${quantidade}`;
+            document.getElementById('lista-pedido').appendChild(pedidoItem);
+        }
+
+        // Finalizar o pedido
+        document.getElementById('finalizar-pedido').addEventListener('click', async function () {
+            if (pizzasSelecionadas.length === 0) {
+                alert('Adicione pizzas ao pedido!');
+                return;
+            }
+
+            // Coleta dados do cliente e forma de pagamento
+            const formaDePagamento = 'dinheiro'; // Pode ser modificado conforme a necessidade
+            const dataHoraEntrega = new Date().toISOString();
+
+            const pedido = {
+                codigo_cliente: codigoCliente,  // <- ESSENCIAL
+                pizzas: pizzasSelecionadas,
+                forma_de_pagamento: formaDePagamento,
+                data_hora_entrega: dataHoraEntrega
+            };
+
+            try {
+                const response = await fetch('http://localhost:3000/api/pedido', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(pedido)
+                });
+
+                const result = await response.json();
+
+                if (result.sucesso) {
+                    alert(`Pedido realizado com sucesso! Código do pedido: ${result.codigo_pedido}`);
+                    // Limpa o pedido
+                    pizzasSelecionadas = [];
+                    total = 0;
+                    document.getElementById('total-pedido').textContent = 'R$ 0,00';
+                    document.getElementById('lista-pedido').innerHTML = '';
+                } else {
+                    alert('Erro ao realizar o pedido.');
+                }
+            } catch (error) {
+                console.error('Erro ao finalizar pedido:', error);
+                alert('Erro ao finalizar o pedido.');
+            }
+        });
+    </script>
 </body>
+
 </html>

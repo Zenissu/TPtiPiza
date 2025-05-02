@@ -69,62 +69,61 @@
 
     <script>
         // Função para atualizar os pedidos
-        function atualizarPedidos() {
-            const pedidosList = document.getElementById('pedidos-list');
-            const errorDiv = document.getElementById('error');
-            pedidosList.innerHTML = ''; 
+// Função para atualizar os pedidos
+function atualizarPedidos() {
+    const pedidosList = document.getElementById('pedidos-list');
+    const errorDiv = document.getElementById('error');
+    pedidosList.innerHTML = ''; 
 
-            // requisição para obter pedidos em andamento
-            fetch('http://localhost:3000/pedidos')
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Erro ao acessar a API de pedidos');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    if (data.length === 0) {
-                        pedidosList.innerHTML = "<p>Não há pedidos em andamento no momento.</p>";
-                    } else {
-                        data.forEach(pedido => {
-                            if (pedido.status === 'Em preparação' || pedido.status === 'No forno') {
-                                const pedidoDiv = document.createElement('div');
-                                pedidoDiv.classList.add('pedido');
-                                pedidoDiv.innerHTML = `
-                                    <strong>Pedido #${pedido.numero}</strong><br>
-                                    Cliente: ${pedido.cliente}<br>
-                                    Sabor: ${pedido.sabor}<br>
-                                    Status: <span class="status ${getStatusClass(pedido.status)}">${pedido.status}</span>
-                                `;
-                                pedidosList.appendChild(pedidoDiv);
-                            }
-                        });
-                    }
-                })
-                .catch(error => {
-                    errorDiv.textContent = error.message;
-                });
-        }
-
-        //determina a classe de estilo com base no status do pedido
-        function getStatusClass(status) {
-            switch (status) {
-                case 'Em preparação':
-                    return 'em-preparacao';
-                case 'No forno':
-                    return 'no-forno';
-                case 'Finalizado':
-                    return 'finalizado';
-                default:
-                    return '';
+    // Requisição para obter pedidos em andamento
+    fetch('http://localhost:3000/api/pedidos/andamento')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Erro ao acessar a API de pedidos em andamento');
             }
-        }
+            return response.json();
+        })
+        .then(data => {
+            if (data.length === 0) {
+                pedidosList.innerHTML = "<p>Não há pedidos em andamento no momento.</p>";
+            } else {
+                data.forEach(pedido => {
+                    const pedidoDiv = document.createElement('div');
+                    pedidoDiv.classList.add('pedido');
+                    pedidoDiv.innerHTML = `
+                        <strong>Pedido #${pedido.numero}</strong><br>
+                        Cliente: ${pedido.cliente}<br>
+                        Sabor(es): ${pedido.sabor}<br>
+                        Status: <span class="status ${getStatusClass(pedido.status)}">${pedido.status}</span>
+                    `;
+                    pedidosList.appendChild(pedidoDiv);
+                });
+            }
+        })
+        .catch(error => {
+            errorDiv.textContent = error.message;
+        });
+}
 
-        // Atualizar a lista
-        setInterval(atualizarPedidos, 10000);
+// Determina a classe de estilo com base no status do pedido
+function getStatusClass(status) {
+    switch (status) {
+        case 'preparando':
+            return 'em-preparacao';
+        case 'no forno':
+            return 'no-forno';
+        case 'finalizado':
+            return 'finalizado';
+        default:
+            return '';
+    }
+}
 
-       
-        atualizarPedidos();
+// Atualizar a lista a cada 10 segundos
+setInterval(atualizarPedidos, 10000);
+
+// Atualizar a lista ao carregar a página
+atualizarPedidos();
     </script>
 
 </body>

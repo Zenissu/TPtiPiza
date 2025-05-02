@@ -264,30 +264,101 @@ app.get('/api/pedidos', (req, res) => {
 app.put('/api/pedidos/:codigo/status', (req, res) => {
     const { codigo } = req.params;  // Pega o código do pedido
     const { situacao } = req.body;  // Pega a nova situação do corpo da requisição
-  
+
     if (!situacao) {
-      return res.status(400).json({ erro: 'A nova situação deve ser fornecida.' });
+        return res.status(400).json({ erro: 'A nova situação deve ser fornecida.' });
     }
-  
+
     const sql = 'UPDATE pedidos SET situacao = ? WHERE codigo = ?';
-  
+
     db.query(sql, [situacao, codigo], (err, result) => {
-      if (err) {
-        console.error('Erro ao atualizar status do pedido:', err);
-        return res.status(500).json({ erro: 'Erro ao atualizar o status do pedido' });
-      }
-  
-      if (result.affectedRows === 0) {
-        return res.status(404).json({ erro: 'Pedido não encontrado' });
-      }
-  
-      res.status(200).json({ mensagem: 'Status do pedido atualizado com sucesso!' });
+        if (err) {
+            console.error('Erro ao atualizar status do pedido:', err);
+            return res.status(500).json({ erro: 'Erro ao atualizar o status do pedido' });
+        }
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ erro: 'Pedido não encontrado' });
+        }
+
+        res.status(200).json({ mensagem: 'Status do pedido atualizado com sucesso!' });
     });
-  });
+});
 
 const PORT = 3000;
 app.listen(PORT, () => {
     console.log(`Servidor rodando em http://localhost:${PORT}`);
+});
+
+// Rota para buscar pedidos finalizados por cliente
+app.get('/api/pedidos/finalizados', (req, res) => {
+    const { cliente } = req.query;
+
+    if (!cliente) {
+        return res.status(400).json({ erro: 'O nome do cliente é obrigatório.' });
+    }
+
+    const sql = `
+    SELECT 
+        p.codigo AS codigo_pedido,
+        c.nome AS nome_cliente,
+        CAST(p.valor_total AS DECIMAL(10,2)) AS valor_total,
+        p.forma_de_pagamento,
+        p.data_hora_da_entrega,
+        GROUP_CONCAT(CONCAT(pi.nome, ' (', pp.quantidade, 'x)') SEPARATOR ', ') AS pizzas
+    FROM pedidos p
+    JOIN cliente c ON p.codigo_cliente = c.codigo
+    JOIN pedido_pizza pp ON p.codigo = pp.codigo_pedido
+    JOIN pizza pi ON pp.codigo_pizza = pi.codigo
+    WHERE c.nome LIKE ? AND p.situacao = 'entregue'
+    GROUP BY p.codigo
+`;
+
+db.query(sql, [`%${cliente}%`], (err, results) => {
+    if (err) {
+        console.error('Erro ao buscar pedidos finalizados:', err);
+        return res.status(500).json({ erro: 'Erro ao buscar pedidos finalizados.' });
+    }
+
+    // Converte valor_total para número no backend
+    const pedidos = results.map(row => ({
+        codigo: row.codigo_pedido,
+        cliente: row.nome_cliente,
+        valor_total: parseFloat(row.valor_total), // Converte para número
+        forma_de_pagamento: row.forma_de_pagamento,
+        data_hora_da_entrega: row.data_hora_da_entrega,
+        pizzas: row.pizzas
+    }));
+
+    res.json(pedidos);
+    });
+});
+
+// Rota para listar pedidos em andamento
+app.get('/api/pedidos/andamento', (req, res) => {
+    const sql = `
+        SELECT 
+            p.codigo AS numero,
+            c.nome AS cliente,
+            GROUP_CONCAT(CONCAT(pi.nome, ' (', pp.quantidade, 'x)') SEPARATOR ', ') AS sabor,
+            p.situacao AS status
+        FROM pedidos p
+        JOIN cliente c ON p.codigo_cliente = c.codigo
+        JOIN pedido_pizza pp ON pp.codigo_pedido = p.codigo
+        JOIN pizza pi ON pi.codigo = pp.codigo_pizza
+        WHERE p.situacao IN ('preparando', 'no forno')
+        GROUP BY p.codigo
+        ORDER BY p.codigo DESC
+    `;
+
+    db.query(sql, (err, results) => {
+        if (err) {
+            console.error('Erro ao buscar pedidos em andamento:', err);
+            return res.status(500).json({ erro: 'Erro ao buscar pedidos em andamento.' });
+        }
+
+        res.json(results);
+    });
 });
 
 // Lista todos os clientes

@@ -35,6 +35,7 @@
                 const card = document.createElement('div');
                 card.className = 'pizza-card';
                 card.innerHTML = `
+                    <img src="${pizza.nome_da_imagem}" alt="Pizza ${pizza.nome}">
                     <h3>${pizza.nome}</h3>
                     <p><strong>Ingredientes:</strong> ${pizza.ingredientes}</p>
                     <p><strong>Preço:</strong> R$ ${parseFloat(pizza.preco).toFixed(2)}</p>

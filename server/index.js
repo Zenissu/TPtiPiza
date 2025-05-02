@@ -99,12 +99,19 @@ app.put('/pizzas/:id', (req, res) => {
 // Rota para cadastrar o pedido
 app.post('/api/pedido', async (req, res) => {
     const { codigo_cliente, pizzas, forma_de_pagamento, data_hora_da_entrega } = req.body;
-
+    console.log("Código do cliente recebido no backend:", codigo_cliente);
+    console.log("Body recebido:", req.body); // Verificar entrada
     if (!codigo_cliente || !Array.isArray(pizzas) || pizzas.length === 0) {
         return res.status(400).json({ erro: "Dados do pedido incompletos." });
     }
 
     try {
+        // Validação da data recebida
+        console.log("Data recebida:", data_hora_da_entrega);
+        if (!data_hora_da_entrega || isNaN(new Date(data_hora_da_entrega))) {
+            return res.status(400).json({ erro: "Data de entrega inválida. Use o formato ISO 8601 (ex: 2025-05-01T19:30:00)." });
+        }
+
         // Validações das pizzas
         let pizzasValidas = await Promise.all(pizzas.map(async (item) => {
             const result = await new Promise((resolve, reject) => {
@@ -132,25 +139,21 @@ app.post('/api/pedido', async (req, res) => {
         const formatarDataMySQL = isoString => {
             const data = new Date(isoString);
 
-            if (isNaN(data)) {
-                throw new Error('Data fornecida é inválida');
-            }
-            
             const pad = n => n.toString().padStart(2, '0');
-            
+
             const ano = data.getFullYear();
             const mes = pad(data.getMonth() + 1);
             const dia = pad(data.getDate());
             const hora = pad(data.getHours());
             const minuto = pad(data.getMinutes());
             const segundo = pad(data.getSeconds());
-        
+
             return `${ano}-${mes}-${dia} ${hora}:${minuto}:${segundo}`;
         };
 
         const dataEntregaFormatada = formatarDataMySQL(data_hora_da_entrega);
         console.log("Data formatada:", dataEntregaFormatada);
-        
+
         const insertPedido = `
             INSERT INTO pedidos (codigo_cliente, valor_total, forma_de_pagamento, situacao, data_hora_da_entrega)
             VALUES (?, ?, ?, 'aguardando', ?)`;
@@ -186,6 +189,85 @@ app.post('/api/pedido', async (req, res) => {
         res.status(500).json({ erro: "Erro inesperado." });
     }
 });
+
+// Rota para listar pedidos com cliente e pizzas
+app.get('/api/pedidos', (req, res) => {
+    const sql = `
+        SELECT 
+            p.codigo AS codigo_pedido,
+            p.codigo_cliente,
+            c.nome AS nome_cliente,
+            p.valor_total,
+            p.situacao,
+            p.forma_de_pagamento,
+            p.data_hora_da_entrega,
+            pp.codigo_pizza,
+            pi.nome AS nome_pizza,
+            pp.quantidade
+        FROM pedidos p
+        JOIN cliente c ON p.codigo_cliente = c.codigo
+        JOIN pedido_pizza pp ON pp.codigo_pedido = p.codigo
+        JOIN pizza pi ON pi.codigo = pp.codigo_pizza
+        ORDER BY p.codigo DESC
+    `;
+
+    db.query(sql, (err, results) => {
+        if (err) {
+            console.error('Erro ao buscar pedidos:', err);
+            return res.status(500).json({ erro: "Erro ao buscar pedidos" });
+        }
+
+        // Agrupar os resultados por pedido
+        const pedidosAgrupados = {};
+        results.forEach(row => {
+            if (!pedidosAgrupados[row.codigo_pedido]) {
+                pedidosAgrupados[row.codigo_pedido] = {
+                    codigo: row.codigo_pedido,
+                    cliente: row.nome_cliente,
+                    codigo_cliente: row.codigo_cliente,
+                    valor_total: row.valor_total,
+                    situacao: row.situacao,
+                    forma_de_pagamento: row.forma_de_pagamento,
+                    data_hora_da_entrega: row.data_hora_da_entrega,
+                    pizzas: []
+                };
+            }
+
+            pedidosAgrupados[row.codigo_pedido].pizzas.push({
+                codigo: row.codigo_pizza,
+                nome: row.nome_pizza,
+                quantidade: row.quantidade
+            });
+        });
+
+        res.json(Object.values(pedidosAgrupados));
+    });
+});
+
+// Rota para atualizar o status do pedido
+app.put('/api/pedidos/:codigo/status', (req, res) => {
+    const { codigo } = req.params;  // Pega o código do pedido
+    const { situacao } = req.body;  // Pega a nova situação do corpo da requisição
+  
+    if (!situacao) {
+      return res.status(400).json({ erro: 'A nova situação deve ser fornecida.' });
+    }
+  
+    const sql = 'UPDATE pedidos SET situacao = ? WHERE codigo = ?';
+  
+    db.query(sql, [situacao, codigo], (err, result) => {
+      if (err) {
+        console.error('Erro ao atualizar status do pedido:', err);
+        return res.status(500).json({ erro: 'Erro ao atualizar o status do pedido' });
+      }
+  
+      if (result.affectedRows === 0) {
+        return res.status(404).json({ erro: 'Pedido não encontrado' });
+      }
+  
+      res.status(200).json({ mensagem: 'Status do pedido atualizado com sucesso!' });
+    });
+  });
 
 const PORT = 3000;
 app.listen(PORT, () => {

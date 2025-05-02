@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Pedidos - Pizzaria</title>
+  <style>
+    .status-container { margin-bottom: 40px; }
+    .pedido { border: 1px solid #ccc; padding: 10px; margin: 10px 0; }
+  </style>
+</head>
+<body>
+  <h1>Pedidos por Situação</h1>
+
+  <div class="status-container" id="aguardando">
+    <h2>Aguardando Pagamento</h2>
+    <!-- Pedidos com status aguardando -->
+  </div>
+
+  <div class="status-container" id="preparando">
+    <h2>Em Preparação</h2>
+    <!-- Pedidos com status preparando -->
+  </div>
+
+  <div class="status-container" id="entregue">
+    <h2>Entregues</h2>
+    <!-- Pedidos com status entregue -->
+  </div>
+
+  <script>
+    // Função para carregar pedidos
+    async function carregarPedidos() {
+      try {
+        const res = await fetch('http://127.0.0.1:3000/api/pedidos');  // URL completa
+        if (!res.ok) {
+          throw new Error('Falha ao carregar pedidos');
+        }
+        const pedidos = await res.json();
+
+        pedidos.forEach(pedido => {
+          console.log("Pedido:", pedido);  // Debugging
+          console.log("Valor Total:", pedido.valor_total); // Verificando o valor total
+
+          const container = document.getElementById(pedido.situacao);
+          const div = document.createElement('div');
+          div.className = 'pedido';
+
+          // Tenta converter o valor total para número, e se não for válido, usa 0
+          const valorTotal = parseFloat(pedido.valor_total);
+          if (isNaN(valorTotal)) {
+            console.log("Valor inválido para o pedido", pedido);
+            return;  // Ignora esse pedido se o valor não for válido
+          }
+
+          div.innerHTML = `
+          <p><strong>Cliente:</strong> ${pedido.nome_cliente || 'Nome não disponível'}</p>
+          <p><strong>Valor Total:</strong> R$ ${valorTotal.toFixed(2)}</p>
+          <p><strong>Forma de Pagamento:</strong> ${pedido.forma_de_pagamento}</p>
+          <p><strong>Status:</strong>
+            <select onchange="atualizarStatus(${pedido.codigo}, this.value)">
+              <option value="aguardando" ${pedido.situacao === 'aguardando' ? 'selected' : ''}>Aguardando</option>
+              <option value="preparando" ${pedido.situacao === 'preparando' ? 'selected' : ''}>Preparando</option>
+              <option value="entregue" ${pedido.situacao === 'entregue' ? 'selected' : ''}>Entregue</option>
+            </select>
+          </p>
+        `;
+        
+          container.appendChild(div);
+        });
+      } catch (error) {
+        console.error('Erro ao carregar pedidos:', error);
+        alert('Ocorreu um erro ao carregar os pedidos. Tente novamente mais tarde.');
+      }
+    }
+
+    // Função para atualizar o status do pedido
+    async function atualizarStatus(codigo, novoStatus) {
+        try {
+          const response = await fetch(`http://127.0.0.1:3000/api/pedidos/${codigo}/status`, {  // URL completa
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ situacao: novoStatus })
+          });
+      
+          if (!response.ok) {
+            throw new Error('Erro ao atualizar o status do pedido');
+          }
+      
+          // Atualiza a interface sem recarregar a página
+          const pedidoDiv = document.querySelector(`#pedido-${codigo}`);
+          if (pedidoDiv) {
+            const selectStatus = pedidoDiv.querySelector('select');
+            selectStatus.value = novoStatus;
+          }
+        } catch (error) {
+          console.error('Erro ao atualizar status:', error);
+          alert('Ocorreu um erro ao atualizar o status do pedido. Tente novamente.');
+        }
+      }
+    
+    carregarPedidos();  // Carrega os pedidos ao iniciar a página
+  </script>
+</body>
+</html>

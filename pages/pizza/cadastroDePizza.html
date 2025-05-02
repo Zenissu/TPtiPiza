@@ -71,7 +71,7 @@
                 const data = await resposta.json();
 
                 if (resposta.ok) {
-                    document.getElementById('mensagem').innerText = `Pizza cadastrada com sucesso! ID: ${data.id}`;
+                    document.getElementById('mensagem').innerText = `Pizza cadastrada com sucesso! ID: ${data.codigo}`;
                     document.getElementById("formPizza").reset();
                 } else {
                     document.getElementById('mensagem').innerText = "Erro no cadastro da pizza.";

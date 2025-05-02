@@ -43,6 +43,7 @@
           const container = document.getElementById(pedido.situacao);
           const div = document.createElement('div');
           div.className = 'pedido';
+          div.id = `pedido-${pedido.codigo}`;
 
           // Tenta converter o valor total para número, e se não for válido, usa 0
           const valorTotal = parseFloat(pedido.valor_total);
@@ -51,19 +52,23 @@
             return;  // Ignora esse pedido se o valor não for válido
           }
 
+          const listaPizzas = pedido.pizzas.map(p => `<li>${p.nome} (x${p.quantidade})</li>`).join('');
+
           div.innerHTML = `
-          <p><strong>Cliente:</strong> ${pedido.nome_cliente || 'Nome não disponível'}</p>
-          <p><strong>Valor Total:</strong> R$ ${valorTotal.toFixed(2)}</p>
-          <p><strong>Forma de Pagamento:</strong> ${pedido.forma_de_pagamento}</p>
-          <p><strong>Status:</strong>
-            <select onchange="atualizarStatus(${pedido.codigo}, this.value)">
-              <option value="aguardando" ${pedido.situacao === 'aguardando' ? 'selected' : ''}>Aguardando</option>
-              <option value="preparando" ${pedido.situacao === 'preparando' ? 'selected' : ''}>Preparando</option>
-              <option value="entregue" ${pedido.situacao === 'entregue' ? 'selected' : ''}>Entregue</option>
-            </select>
-          </p>
-        `;
-        
+            <p><strong>Cliente:</strong> ${pedido.cliente || 'Nome não disponível'}</p>
+            <p><strong>Valor Total:</strong> R$ ${valorTotal.toFixed(2)}</p>
+            <p><strong>Forma de Pagamento:</strong> ${pedido.forma_de_pagamento}</p>
+            <p><strong>Status:</strong>
+              <select onchange="atualizarStatus(${pedido.codigo}, this.value)">
+                <option value="aguardando" ${pedido.situacao === 'aguardando' ? 'selected' : ''}>Aguardando</option>
+                <option value="preparando" ${pedido.situacao === 'preparando' ? 'selected' : ''}>Preparando</option>
+                <option value="entregue" ${pedido.situacao === 'entregue' ? 'selected' : ''}>Entregue</option>
+              </select>
+            </p>
+            <p><strong>Pizzas:</strong></p>
+            <ul>${listaPizzas}</ul>
+          `;
+           
           container.appendChild(div);
         });
       } catch (error) {

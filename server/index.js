@@ -1,6 +1,7 @@
 const mysql = require('mysql2');
 const cors = require('cors');
 const express = require('express');
+const axios = require('axios');
 
 const app = express();
 app.use(cors()); // inicia cors
@@ -99,30 +100,14 @@ app.put('/pizzas/:id', (req, res) => {
 // Rota para cadastrar o pedido
 app.post('/api/pedido', async (req, res) => {
     const { codigo_cliente, pizzas, forma_de_pagamento, data_hora_da_entrega } = req.body;
-    console.log("Código do cliente recebido no backend:", codigo_cliente);
-    console.log("Body recebido:", req.body); // Verificar entrada
+
+    // Valida os dados recebidos
     if (!codigo_cliente || !Array.isArray(pizzas) || pizzas.length === 0) {
         return res.status(400).json({ erro: "Dados do pedido incompletos." });
     }
 
     try {
-        // Validação da data recebida
-        console.log("Data recebida:", data_hora_da_entrega);
-        if (!data_hora_da_entrega || isNaN(new Date(data_hora_da_entrega))) {
-            return res.status(400).json({ erro: "Data de entrega inválida. Use o formato ISO 8601 (ex: 2025-05-01T19:30:00)." });
-        }
-
-        // Validações das pizzas
-        let pizzasValidas = await Promise.all(pizzas.map(async (item) => {
-            const result = await new Promise((resolve, reject) => {
-                db.query('SELECT * FROM pizza WHERE codigo = ?', [item.codigo_pizza], (err, result) => {
-                    if (err || result.length === 0) reject(`Pizza código ${item.codigo_pizza} inválida.`);
-                    resolve(result);
-                });
-            });
-            return result;
-        }));
-
+        // Calcula o valor total do pedido
         let valor_total = 0;
         let consultas_pizzas = pizzas.map(item => {
             return new Promise((resolve, reject) => {
@@ -136,40 +121,55 @@ app.post('/api/pedido', async (req, res) => {
 
         await Promise.all(consultas_pizzas);
 
-        const formatarDataMySQL = isoString => {
-            const data = new Date(isoString);
+        // Busca o cliente pelo código
+        const cliente = await new Promise((resolve, reject) => {
+            db.query('SELECT nome FROM cliente WHERE codigo = ?', [codigo_cliente], (err, result) => {
+                if (err || result.length === 0) return reject('Cliente não encontrado.');
+                resolve(result[0]);
+            });
+        });
 
-            const pad = n => n.toString().padStart(2, '0');
+        let situacao = 'aguardando';
 
-            const ano = data.getFullYear();
-            const mes = pad(data.getMonth() + 1);
-            const dia = pad(data.getDate());
-            const hora = pad(data.getHours());
-            const minuto = pad(data.getMinutes());
-            const segundo = pad(data.getSeconds());
+        // Se a forma de pagamento for "cartão", verifica o saldo no wscartao
+        if (forma_de_pagamento === 'cartao') {
+            try {
+                const resposta = await axios.post('http://localhost:8080/cartao/compras', {
+                    nome: cliente.nome,
+                    valor: valor_total,
+                });
 
-            return `${ano}-${mes}-${dia} ${hora}:${minuto}:${segundo}`;
-        };
+                if (resposta.data.mensagem === 'Compra aprovada') {
+                    situacao = 'preparando';
+                } else {
+                    return res.status(402).json({ erro: 'Pagamento não aprovado. Saldo insuficiente.' });
+                }
+            } catch (error) {
+                console.error('Erro ao processar pagamento com cartão:', error.message);
+                return res.status(500).json({ erro: 'Erro ao processar pagamento com cartão.', detalhes: error.message });
+            }
+        }
 
-        const dataEntregaFormatada = formatarDataMySQL(data_hora_da_entrega);
-        console.log("Data formatada:", dataEntregaFormatada);
+        // Formata a data para o formato MySQL
+        const dataFormatada = formatarDataMySQL(data_hora_da_entrega);
 
-        const insertPedido = `
+        // Insere o pedido no banco de dados
+        const sqlPedido = `
             INSERT INTO pedidos (codigo_cliente, valor_total, forma_de_pagamento, situacao, data_hora_da_entrega)
-            VALUES (?, ?, ?, 'aguardando', ?)`;
+            VALUES (?, ?, ?, ?, ?)`;
 
-        db.query(insertPedido, [codigo_cliente, valor_total, forma_de_pagamento, dataEntregaFormatada], (err, pedidoResult) => {
+        db.query(sqlPedido, [codigo_cliente, valor_total, forma_de_pagamento, situacao, dataFormatada], (err, result) => {
             if (err) {
                 console.error('Erro ao inserir pedido:', err);
                 return res.status(500).json({ erro: "Erro ao registrar pedido." });
             }
 
-            const codigo_pedido = pedidoResult.insertId;
+            const codigo_pedido = result.insertId;
 
             let insercoes = pizzas.map(item => {
                 return new Promise((resolve, reject) => {
-                    const insertItem = 'INSERT INTO pedido_pizza (codigo_pedido, codigo_pizza, quantidade) VALUES (?, ?, ?)';
-                    db.query(insertItem, [codigo_pedido, item.codigo_pizza, item.quantidade], (err) => {
+                    const sqlItem = 'INSERT INTO pedido_pizza (codigo_pedido, codigo_pizza, quantidade) VALUES (?, ?, ?)';
+                    db.query(sqlItem, [codigo_pedido, item.codigo_pizza, item.quantidade], (err) => {
                         if (err) reject(err);
                         else resolve();
                     });
@@ -177,7 +177,7 @@ app.post('/api/pedido', async (req, res) => {
             });
 
             Promise.all(insercoes)
-                .then(() => res.status(201).json({ sucesso: true, codigo_pedido }))
+                .then(() => res.status(201).json({ sucesso: true, codigo_pedido, situacao }))
                 .catch(err => {
                     console.error('Erro ao inserir itens do pedido:', err);
                     res.status(500).json({ erro: "Erro ao salvar itens do pedido." });
@@ -189,6 +189,22 @@ app.post('/api/pedido', async (req, res) => {
         res.status(500).json({ erro: "Erro inesperado." });
     }
 });
+
+// Função para formatar a data no formato MySQL
+const formatarDataMySQL = isoString => {
+    const data = new Date(isoString);
+
+    const pad = n => n.toString().padStart(2, '0');
+
+    const ano = data.getFullYear();
+    const mes = pad(data.getMonth() + 1);
+    const dia = pad(data.getDate());
+    const hora = pad(data.getHours());
+    const minuto = pad(data.getMinutes());
+    const segundo = pad(data.getSeconds());
+
+    return `${ano}-${mes}-${dia} ${hora}:${minuto}:${segundo}`;
+};
 
 // Rota para listar pedidos com cliente e pizzas
 app.get('/api/pedidos', (req, res) => {

@@ -74,7 +74,7 @@
                 } else {
                     // Agora, procuramos o cliente que corresponde exatamente ao nome ou telefone buscado
                     let clienteEncontrado = null;
-                    if (/^\d{11}$/.test(clienteInput)) {
+                    if (/^\d{14}$/.test(clienteInput)) {
                         // Se for um telefone, procura o cliente com o telefone exato
                         clienteEncontrado = clientes.find(c => c.telefone === clienteInput);
                     } else {

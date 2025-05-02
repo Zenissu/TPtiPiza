@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Buscar Pedidos Finalizados</title>
+</head>
+<body>
+  <div class="container">
+    <h2>Buscar Pedidos Finalizados</h2>
+    <form id="formBusca">
+      <label for="cliente">Nome do Cliente:</label>
+      <input type="text" id="cliente" name="cliente" placeholder="Digite o nome do cliente" required>
+
+      <button type="submit">Buscar</button>
+    </form>
+
+    <table id="tabelaPedidos" style="display:none;">
+      <thead>
+        <tr>
+          <th>Pedido</th>
+          <th>Cliente</th>
+          <th>Entrega</th>
+          <th>Pagamento</th>
+          <th>Valor Total</th>
+          <th>Pizzas</th>
+        </tr>
+      </thead>
+      <tbody id="tbodyPedidos"></tbody>
+    </table>
+  </div>
+
+  <script>
+    document.getElementById('formBusca').addEventListener('submit', async function (e) {
+      e.preventDefault();
+
+      const cliente = document.getElementById('cliente').value.trim();
+      if (!cliente) return;
+
+      const params = new URLSearchParams({ cliente });
+
+      const response = await fetch(`http://localhost:3000/api/pedidos/finalizados?${params.toString()}`);
+      const pedidos = await response.json();
+
+      const tbody = document.getElementById('tbodyPedidos');
+      tbody.innerHTML = '';
+
+      if (pedidos.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6">Nenhum pedido encontrado para esse cliente.</td></tr>';
+      } else {
+        pedidos.forEach(pedido => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>#${pedido.codigo}</td>
+            <td>${pedido.cliente}</td>
+            <td>${pedido.forma_de_pagamento}</td>
+            <td>R$ ${pedido.valor_total.toFixed(2)}</td>
+            <td>
+              <ul>
+                ${pedido.pizzas.map(p => `<li>${p.nome} (${p.quantidade}x)</li>`).join('')}
+              </ul>
+            </td>
+          `;
+          tbody.appendChild(row);
+        });
+      }
+
+      document.getElementById('tabelaPedidos').style.display = 'table';
+    });
+  </script>
+</body>
+</html>

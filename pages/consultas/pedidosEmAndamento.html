@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consulta de Pedidos em Andamento - Pizzaria</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 500px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        .pedido {
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .pedido .status {
+            font-weight: bold;
+        }
+
+        .pedido .status.em-preparacao {
+            color: orange;
+        }
+
+        .pedido .status.no-forno {
+            color: green;
+        }
+
+        .pedido .status.finalizado {
+            color: gray;
+        }
+
+        .error {
+            color: red;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Pedidos em Andamento</h1>
+        <div id="pedidos-list"></div>
+        <div class="error" id="error"></div>
+    </div>
+
+    <script>
+        // Função para atualizar os pedidos
+        function atualizarPedidos() {
+            const pedidosList = document.getElementById('pedidos-list');
+            const errorDiv = document.getElementById('error');
+            pedidosList.innerHTML = ''; 
+
+            // requisição para obter pedidos em andamento
+            fetch('http://localhost:3000/pedidos')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Erro ao acessar a API de pedidos');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.length === 0) {
+                        pedidosList.innerHTML = "<p>Não há pedidos em andamento no momento.</p>";
+                    } else {
+                        data.forEach(pedido => {
+                            if (pedido.status === 'Em preparação' || pedido.status === 'No forno') {
+                                const pedidoDiv = document.createElement('div');
+                                pedidoDiv.classList.add('pedido');
+                                pedidoDiv.innerHTML = `
+                                    <strong>Pedido #${pedido.numero}</strong><br>
+                                    Cliente: ${pedido.cliente}<br>
+                                    Sabor: ${pedido.sabor}<br>
+                                    Status: <span class="status ${getStatusClass(pedido.status)}">${pedido.status}</span>
+                                `;
+                                pedidosList.appendChild(pedidoDiv);
+                            }
+                        });
+                    }
+                })
+                .catch(error => {
+                    errorDiv.textContent = error.message;
+                });
+        }
+
+        //determina a classe de estilo com base no status do pedido
+        function getStatusClass(status) {
+            switch (status) {
+                case 'Em preparação':
+                    return 'em-preparacao';
+                case 'No forno':
+                    return 'no-forno';
+                case 'Finalizado':
+                    return 'finalizado';
+                default:
+                    return '';
+            }
+        }
+
+        // Atualizar a lista
+        setInterval(atualizarPedidos, 10000);
+
+       
+        atualizarPedidos();
+    </script>
+
+</body>
+</html>

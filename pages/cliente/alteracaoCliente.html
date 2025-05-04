@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
-<link rel="stylesheet" href="/css/style.css">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Alteração de dados do cliente</title>
+    
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Alteração de dados do cliente</title>
+        <link rel="stylesheet" href="/css/style.css">
 </head>
 
 <body>
@@ -14,10 +14,17 @@
         <div class="div-logo">
             <img src="../../imagens/logo_pizzaria.jpg" alt="logo_pizzaria">
         </div>
-        <div class="headerSelected">Clientes</div>
-        <div>Pizzas</div>
-        <div>Pedidos</div>
+        <a href="../cliente/cadastroCliente.html">
+            <div class="headerSelected">Clientes</div>
+        </a>
+        <a href="../pizza/cadastroDePizza.html">
+            <div  >Pizzas</div>
+        </a>
+        <a href="../pedidos/pedido.html">
+            <div>Pedidos</div>
+        </a>
     </header>
+    <br>
     <div class="containerTudo containerTudo2">
         <div class="containerOptions">
             <h1>Menu Clientes</h1>
@@ -28,23 +35,21 @@
             </div>
 
         </div>
-        <form class="containerForm no-border-radius" id="formClient">
+        <span class="containerForm no-border-radius">
             <h1 class="letra-menor">Consulta de Cliente</h1><br>
             <!-- Verifica o cliente pelo codigo do mesmo-->
             <label for="buscaCodigo">Código do cliente:</label></label>
-            <input type="text" id="buscaCodigo" placeholder="Escreva aqui o código do cliente" required /><br>
-            <button onclick='buscarCliente("codigo")'>Buscar via código</button><br><br>
-            
-            <p style="text-align: center; color: white; font-size: small; ">-------------------ou-------------------</p>
-            <br><br>
+            <input type="text" id="buscaCodigo" placeholder="Escreva aqui o código do cliente" required /><br><br>
+            <button onclick='buscarCliente("codigo")'>Buscar via código</button><br>
+            <p style="text-align: center; color: white; font-size: small; ">-------------------ou-------------------</p><br>    
             <!-- Verifica pelo telefone do mesmo-->
             <label for="buscaTelefone">Telefone do cliente:</label></label>
-            <input type="text" id="buscaTelefone" placeholder="Escreva aqui o telefone do cliente" maxlength="14" /><br>
+            <input type="text" id="buscaTelefone" placeholder="Escreva aqui o telefone do cliente" maxlength="14" /><br><br>
             <button onclick="buscarCliente('telefone')">Buscar via telefone</button><br><br>
 
             
-        </form>
-        <form class="containerForm containerForm2">
+        </span>
+        <fieldset style="border: none;" class="containerForm containerForm2" id="formClient" disabled>
             <h1 class="letra-menor">Alterar Dados de Cliente</h1><br>
             <label for="codigo">Código:</label>
             <input id="codigo" readonly/><br>
@@ -63,7 +68,7 @@
     
             <button onclick="atualizarCliente()">Atualizar Cliente</button>
 
-        </form>
+        </fieldset>
     </div>
 
     <script>
@@ -101,6 +106,7 @@
                     } else {
                         alert('Cliente não encontrado!');
                         document.getElementById('formClient').disabled = true;
+                       
                     }
                 })
                 .catch(() => alert('Cliente não encontrado!'));

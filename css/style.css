@@ -18,6 +18,11 @@ body {
 
 /* Classes do Header */
 
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
 header{
   background-color: #f2f2f2;
   font-family: Arial, sans-serif;
@@ -31,7 +36,7 @@ header{
   margin: 0;
 }
 
-header>div{
+header>a>div{
   padding: 20px;
   justify-content: center;
   text-align: center;
@@ -47,6 +52,7 @@ header>div{
 header>div>img{
   width: 100px;
   height: 100px;
+  border-radius: 12px;
   box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.5);
 }
 
@@ -59,7 +65,8 @@ header>div>img{
 }
 .div-logo{
   background-color: none;
-  box-shadow: none; 
+  box-shadow: none;
+  padding-right: 50px; 
 }
 
 
@@ -74,6 +81,7 @@ h1{
   text-align: center;
   font-size: 23pt;
   color: white;
+  padding: 9px;
 }
 .containerTudo{
   background-color: #f2f2f2;
@@ -90,6 +98,8 @@ h1{
   
 }
 
+
+
 .containerTudo2{
   width: 700px;
   
@@ -102,6 +112,14 @@ div>h1{
   padding-top: 50px;
 }
 form>h1{
+  color: white;
+  padding-top: 15px;
+}
+fieldset>h1{
+  color: white;
+  padding-top: 15px;
+}
+span>h1{
   color: white;
   padding-top: 15px;
 }
@@ -123,6 +141,10 @@ button{
 
 input{
   height: 25px;
+  width: 100%;
+}
+textarea{
+  height: 34px;
   width: 100%;
 }
 

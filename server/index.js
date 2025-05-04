@@ -8,7 +8,7 @@ app.use(cors()); // inicia cors
 app.use(express.json()); // recebe json no corpo do html
 
 const db = mysql.createConnection({
-    host: 'localhost',
+    host: '177.140.77.232',
     user: 'felipe',
     password: '363784141',
     database: 'pizzaria'

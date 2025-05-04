@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
-<link rel="stylesheet" href="/css/style.css">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cadastro de clientes</title>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Cadastro de clientes</title>
+        <link rel="stylesheet" href="/css/style.css">
 </head>
 
 <body>
@@ -12,10 +12,17 @@
         <div class="div-logo">
             <img src="../../imagens/logo_pizzaria.jpg" alt="logo_pizzaria">
         </div>
-        <div class="headerSelected">Clientes</div>
-        <div>Pizzas</div>
-        <div>Pedidos</div>
+        <a href="../cliente/cadastroCliente.html">
+            <div class="headerSelected">Clientes</div>
+        </a>
+        <a href="../pizza/cadastroDePizza.html">
+            <div  >Pizzas</div>
+        </a>
+        <a href="../pedidos/pedido.html">
+            <div>Pedidos</div>
+        </a>
     </header>
+    <br>
     <div class="containerTudo">
         <div class="containerOptions">
             <h1>Menu Clientes</h1>
@@ -32,8 +39,8 @@
             <label for="telefone">Telefone:</label><br><input type="text" id="telefone" name="telefone" maxlength="14"
                 minlength="14" placeholder="(xx)xxxxx-xxxx" required /><br><br>
             <label for="endereco">Endereco:</label><br><input type="text" id="endereco" name="endereco" placeholder="Rua dos Ipês, 432 - São Miguel Paulista, São Paulo - SP, CEP 08010-350" required /><br><br><br>
-            <p id="mensagemTelefone"></p>
-            <p id="mensagem"></p>
+            <p style="text-align: center; font-size: small;" id="mensagemTelefone"></p>
+            <p style="text-align: center; font-size: small;" id="mensagem"></p>
             <button type="submit" id="btnCadastrar"> Cadastrar </button><br>
         </form>
     </div>

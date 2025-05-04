@@ -5,38 +5,65 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Alteração de dados da Pizza</title>
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 
 <body>
-    <h1>Alteração de dados da Pizza:</h1>
+    <header>
+        <div class="div-logo">
+            <img src="../../imagens/logo_pizzaria.jpg" alt="logo_pizzaria">
+        </div>
+        <a href="../cliente/cadastroCliente.html">
+            <div>Clientes</div>
+        </a>
+        <a href="../pizza/cadastroDePizza.html">
+            <div class="headerSelected" >Pizzas</div>
+        </a>
+        <a href="../pedidos/pedido.html">
+            <div>Pedidos</div>
+        </a>
+    </header>
+    <br>
+    <div class="containerTudo containerTudo2 mais-alto">
+        <div class="containerOptions">
+            <h1>Menu Pizzas</h1><br>
+            <button class="btnOptions" type="button" onclick="window.location.href='cadastroDePizza.html'"> Cadastrar Nova Pizza </button>
+            <button class="btnOptions selectedOption" type="button" onclick="window.location.href='alteracaoPizza.html'"> Alterar Pizza </button>
+        </div>
+        <span class="containerForm no-border-radius">
+            <h1 class="letra-menor">Consulta de Pizza</h1>
+            <br><br>
+            <!-- Verifica a pizza pelo código -->
+            <label for="buscaCodigo">Código da pizza:</label>
+            <input type="text" id="buscaCodigo" placeholder="Escreva aqui o código da pizza" required /><br>
+            <button onclick="buscarPizza()">Buscar Pizza</button><br><br>
+        </span>
+        <fieldset style="border: none;" class="containerForm containerForm2" id="formPizza" disabled>
+            <h1 class="letra-menor">Alterar Pizza</h1>
+            <label for="codigo">Código:</label>
+            <input id="codigo" readonly /><br>
+    
+            <label for="nome">Nome:</label>
+            <input type="text" id="nome" required><br>
+    
+            <label for="ingredientes">Ingredientes:</label>
+            <input type="text" id="ingredientes" required><br>
+    
+            <label for="nome_da_imagem">Link da Imagem:</label>
+            <input type="text" id="nome_da_imagem" required><br>
+    
+            <label for="preco">Preço:</label>
+            <input type="number" id="preco" step="0.01" required><br>
+    
+            <label for="situacao">Situação:</label>
+            <input type="checkbox" id="situacao"><br>
+    
+            <button onclick="atualizarPizza()">Atualizar Pizza</button>
+        </fieldset>
+                
+    </div>
 
-    <!-- Verifica a pizza pelo código -->
-    <label for="buscaCodigo">Código da pizza:</label>
-    <input type="text" id="buscaCodigo" placeholder="Escreva aqui o código da pizza" required /><br><br>
-    <button onclick="buscarPizza()">Buscar Pizza</button><br><br>
 
-    <fieldset id="formPizza" disabled>
-
-        <label for="codigo">Código:</label>
-        <input id="codigo" readonly /><br><br>
-
-        <label for="nome">Nome:</label>
-        <input type="text" id="nome" required><br><br>
-
-        <label for="ingredientes">Ingredientes:</label>
-        <input type="text" id="ingredientes" required><br><br>
-
-        <label for="nome_da_imagem">Link da Imagem:</label>
-        <input type="text" id="nome_da_imagem" required><br><br>
-
-        <label for="preco">Preço:</label>
-        <input type="number" id="preco" step="0.01" required><br><br>
-
-        <label for="situacao">Situação:</label>
-        <input type="checkbox" id="situacao"> Ativa<br><br>
-
-        <button onclick="atualizarPizza()">Atualizar Pizza</button>
-    </fieldset>
 
     <script>
         function preencherFormulario(pizza) {

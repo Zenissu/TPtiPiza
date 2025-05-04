@@ -9,35 +9,41 @@
 
 <body>
     <header>
-        <div class="no-border"><img src="/imagens_referencias/logo_pizzaria.jpg" alt="Logo"></div>
-        <div>Clientes</div>
-        <div class="headerSelected">Pizzas</div>
-        <div>Pedidos</div>
+        <div class="div-logo">
+            <img src="../../imagens/logo_pizzaria.jpg" alt="logo_pizzaria">
+        </div>
+        <a href="../cliente/cadastroCliente.html">
+            <div>Clientes</div>
+        </a>
+        <a href="../pizza/cadastroDePizza.html">
+            <div class="headerSelected" >Pizzas</div>
+        </a>
+        <a href="../pedidos/pedido.html">
+            <div>Pedidos</div>
+        </a>
     </header>
-
+    <br>
     <div class="containerTudo">
         <div class="containerOptions">
-            <h1>Menu Pizzas</h1><br><br>
-            <button style="color: white; background-color: dimgray;" class="btnOptions" type="button" onclick="window.location.href='cadastroPizza.html'"> Cadastrar Nova Pizza </button>
-            <button class="btnOptions" type="button"> Alterar Pizza </button>
-            <button class="btnOptions" type="button"> Remover Pizza </button>
-            <button class="btnOptions" type="button"> Consultar </button>
+            <h1>Menu Pizzas</h1><br>
+            <button class="btnOptions selectedOption" type="button" onclick="window.location.href='cadastroDePizza.html'"> Cadastrar Nova Pizza </button>
+            <button class="btnOptions" type="button" onclick="window.location.href='alteracaoPizza.html'">Alterar Pizza</button>  
         </div>
 
         <div class="containerForm">
             <form class="form" id="formPizza">
-                <h1>Cadastro de Pizza</h1><br><br>
+                <h1>Cadastro de Pizza</h1><br>
                 <label for="nome">Nome:</label><br>
-                <input type="text" id="nome" placeholder="Digite o nome da pizza" required /><br><br>
+                <input type="text" id="nome" placeholder="Digite o nome da pizza" required /><br>
 
                 <label for="ingredientes">Ingredientes:</label><br>
                 <textarea id="ingredientes" placeholder="Digite os ingredientes separados por vírgula" required></textarea><br><br>
 
                 <label for="preco">Preço:</label><br>
-                <input type="number" id="preco" placeholder="Digite o preço" step="0.01" min="0" required /><br><br>
+                <input type="number" id="preco" placeholder="Digite o preço" step="0.01" min="0" required /><br>
 
                 <label for="nome_da_imagem">Link da Imagem:</label><br>
-                <input type="url" id="nome_da_imagem" placeholder="https://exemplo.com/imagem.jpg" required /><br><br>
+                <input type="url" id="nome_da_imagem" placeholder="https://exemplo.com/imagem.jpg" required /><br>
 
                 <p id="mensagem"></p>
                 <button type="submit" id="btnCadastrar">Cadastrar</button><br><br>

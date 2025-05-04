@@ -3,12 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <title>Catálogo de Pizzas</title>
+    <style>
+        img{
+            border-radius: 12px;
+        }
+        span{
+            display: flex;
+            flex-direction: row;
+            width: 350px;
+            
+        }
+        p{
+            margin-left: 20px;
+        }
+    </style>
+    <link rel="stylesheet" href="/css/style.css">
 </head>
+<header>
+    <div class="div-logo">
+        <img src="../../imagens/logo_pizzaria.jpg" alt="logo_pizzaria">
+    </div>
+    <a href="../cliente/cadastroCliente.html">
+        <div>Clientes</div>
+    </a>
+    <a href="../pizza/cadastroDePizza.html">
+        <div class="headerSelected" >Pizzas</div>
+    </a>
+    <a href="../pedidos/pedido.html">
+        <div>Pedidos</div>
+    </a>
+</header><br>
 <body>
-    <h1>Catálogo de Pizzas</h1>
-    <input type="text" id="search" placeholder="Buscar por nome...">
+    <div class="containerTudo">
+        <div class="containerOptions">
+            <h1>Menu Pizzas</h1><br>
+            <button class="btnOptions" type="button" onclick="window.location.href='../pizza/cadastroDePizza.html'"> Cadastrar Nova Pizza </button>
+            <button class="btnOptions" type="button" onclick="window.location.href='../pizza/alteracaoPizza.html'">Alterar Pizza</button>  
+            <button class="btnOptions selectedOption" type="button" onclick="window.location.href='../consultas/catalogo.html'">Catálogo de Pizzas</button>  
+        </div>
+        <div class="containerForm">
 
-    <div id="pizza-list"></div>
+            <h1>Catálogo de Pizzas</h1><br>
+            <input type="text" id="search" placeholder="Buscar por nome..."><br>
+        
+            <div id="pizza-list"></div>
+        </div>
+
+    </div>
+
 
     <script>
         async function fetchPizzas() {
@@ -35,10 +77,12 @@
                 const card = document.createElement('div');
                 card.className = 'pizza-card';
                 card.innerHTML = `
-                    <img src="${pizza.nome_da_imagem}" alt="Pizza ${pizza.nome}">
-                    <h3>${pizza.nome}</h3>
-                    <p><strong>Ingredientes:</strong> ${pizza.ingredientes}</p>
-                    <p><strong>Preço:</strong> R$ ${parseFloat(pizza.preco).toFixed(2)}</p>
+                    <h3>${pizza.nome}</h3><br>
+                    <span>
+                        <img width=120 height=120 src="${pizza.nome_da_imagem}" alt="Pizza ${pizza.nome}">
+                        <p><strong>Ingredientes:</strong> ${pizza.ingredientes}<br/><br/><strong>Preço:</strong> R$ ${parseFloat(pizza.preco).toFixed(2)}</p><br/>
+                    </span>
+                    <br><hr><br>
                 `;
                 list.appendChild(card);
             });

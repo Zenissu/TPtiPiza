@@ -3,30 +3,70 @@
 <head>
   <meta charset="UTF-8">
   <title>Buscar Pedidos Finalizados</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    table {
+    border-collapse: collapse; /* Faz as bordas se unirem */
+    width: 100%;
+  }
+
+  th, td {
+    border: 1px solid black; /* Cria as bordas internas */
+    padding: 8px;
+    text-align: center;
+  }
+  </style>
 </head>
 <body>
-  <div class="container">
-    <h2>Buscar Pedidos Finalizados</h2>
-    <form id="formBusca">
-      <label for="cliente">Nome do Cliente:</label>
-      <input type="text" id="cliente" name="cliente" placeholder="Digite o nome do cliente" required>
+  <header>
+    <div class="div-logo">
+        <img src="../../imagens/logo_pizzaria.jpg" alt="logo_pizzaria">
+    </div>
+    <a href="../cliente/cadastroCliente.html">
+        <div>Clientes</div>
+    </a>
+    <a href="../pizza/cadastroDePizza.html">
+        <div  >Pizzas</div>
+    </a>
+    <a href="../pedidos/pedido.html">
+        <div class="headerSelected">Pedidos</div>
+    </a>
+</header><br>
+  <div class="containerTudo">
+    <div class="containerOptions">
+      <h1>Menu Pedidos</h1>
+      <br>
+      <div class="centralizarDivOptions">
+        <button type= "button" class="btnOptions" onclick="window.location.href='../pedidos/pedido.html'">Novo Pedido</button>
+        <button type= "button" class="btnOptions" onclick="window.location.href='../pedidos/status.html'">Status dos Pedidos</button>
+        <button type= "button" class="btnOptions selectedOption" onclick="window.location.href='../consultas/consultarPedidosAnteriores.html'">Pedidos Finalizados</button>
+        <button type= "button" class="btnOptions" onclick="window.open('../consultas/pedidosEmAndamento.html', '_blank')">Pedidos em Andamento</button>
+      </div>
+    </div>
+    <div class="containerForm">
+      <h1 >Consultar Pedidos Finalizados</h1>
+      <br>
+      <form id="formBusca">
+        <label for="cliente">Nome do Cliente:</label>
+        <input type="text" id="cliente" name="cliente" placeholder="Digite o nome do cliente" required>
+        <br>
+        <button type="submit">Buscar</button> <br><br>
+      </form>
+      <table id="tabelaPedidos" style="display:none;">
+        <thead>
+          <tr>
+            <th>Pedido</th>
+            <th>Cliente</th>
+            <th>Entrega</th>
+            <th>Pagamento</th>
+            <th>Valor Total</th>
+            <th>Pizzas</th>
+          </tr>
+        </thead>
+        <tbody id="tbodyPedidos"></tbody>
+      </table>
+    </div>
 
-      <button type="submit">Buscar</button>
-    </form>
-
-    <table id="tabelaPedidos" style="display:none;">
-      <thead>
-        <tr>
-          <th>Pedido</th>
-          <th>Cliente</th>
-          <th>Entrega</th>
-          <th>Pagamento</th>
-          <th>Valor Total</th>
-          <th>Pizzas</th>
-        </tr>
-      </thead>
-      <tbody id="tbodyPedidos"></tbody>
-    </table>
   </div>
 
   <script>

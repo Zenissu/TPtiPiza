@@ -86,7 +86,7 @@ h1{
 }
 .containerTudo{
   background-color: #f2f2f2;
-  max-width: 600px;
+  max-width: 1000px;
   height: auto;
   margin: 0 auto;
   display: flex;
@@ -184,9 +184,11 @@ textarea{
 }
 
 .btnOptions{
-  /* border-radius: 0; */
+  border-radius: 0;
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
+  border-top-right-radius: 80px;
+  border-bottom-right-radius: 80px;
   width: 100%;
   margin: 0;
   border-color: #ccc;
@@ -214,8 +216,7 @@ textarea{
   flex-direction: column;
   background-color: dimgray;
   width: 80%;
-  max-width: 700px;
-  min-height:300px ;
+  min-height:500px ;
   border-top-right-radius: 12px;
   border-bottom-right-radius: 12px;
   padding: 35px;

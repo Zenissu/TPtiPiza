@@ -6,6 +6,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pizzaria - Pedido</title>
     <link rel="stylesheet" href="/css/style.css">
+    <style>
+        .largura-item{
+            width: 300px;
+        }
+        ul{
+            list-style-type: none;
+        }
+      
+    </style>
 </head>
 
 <body>
@@ -28,8 +37,10 @@
             <h1>Menu Pedidos</h1>
             <br>
             <div class="centralizarDivOptions">
-                <button type= "button" class="btnOptions selectedOption">Novo Pedido</button>
+                <button type= "button" class="btnOptions selectedOption" onclick="window.location.href='../pedidos/pedido.html'">Novo Pedido</button>
                 <button type= "button" class="btnOptions" onclick="window.location.href='status.html'">Status dos Pedidos</button>
+                <button type= "button" class="btnOptions" onclick="window.location.href='../consultas/consultarPedidosAnteriores.html'">Pedidos Finalizados</button>
+                <button type= "button" class="btnOptions" onclick="window.open('../consultas/pedidosEmAndamento.html', '_blank')">Pedidos em Andamento</button>
             </div>
     
         </div>
@@ -44,7 +55,7 @@
             </div>
     
             <!-- Se cliente for encontrado, mostra opções para selecionar pizzas -->
-            <div id="seleciona-pizzas" style="display: none;">
+            <div class = "centraliza" id="seleciona-pizzas" style="display: none;">
                 
                 <ul id="lista-pizzas"></ul>
     
@@ -145,11 +156,11 @@
                     const li = document.createElement('li');
                     li.classList.add('pizza-item');
                     li.innerHTML = `
-                    <div class="">
+                    <div class="largura-item">
                         <p><strong>${pizza.nome}</strong> - R$ ${preco.toFixed(2)}</p><br/>
                         <div class="pizza">
                             <img style="border-radius: 12px" width="100" height="100" src="${pizza.nome_da_imagem}" alt="${pizza.nome}" class="pizza-imagem"/>
-                            <p style="text-align: justify; margin-left: 15px;">${pizza.ingredientes}</p>
+                            <p style=" margin-left: 15px;">${pizza.ingredientes}</p>
                         </div>
                         <div class = "pizza" style = "justify-content: flex-end;">
                             <div style = "width: 50%"></div>    

@@ -5,7 +5,7 @@
 }
 
 body {
-  height: 100vh;
+  min-height: 100vh;
   background-color: #f2f2f2;
   font-family: Arial, sans-serif;
   display: flex;
@@ -14,6 +14,7 @@ body {
   flex-direction: column;
   flex-wrap: wrap;
   gap: 0;
+  overflow-y: auto;
 }
 
 /* Classes do Header */
@@ -85,7 +86,7 @@ h1{
 }
 .containerTudo{
   background-color: #f2f2f2;
-  width: 500px;
+  max-width: 600px;
   height: auto;
   margin: 0 auto;
   display: flex;
@@ -110,6 +111,11 @@ h1{
 div>h1{
   color: dimgray;
   padding-top: 50px;
+}
+.containerForm h1{
+  color: white;
+  padding-top: 15px;
+
 }
 form>h1{
   color: white;
@@ -144,8 +150,12 @@ input{
   width: 100%;
 }
 textarea{
-  height: 34px;
+  font-family: sans-serif;
+  height: 40px;
   width: 100%;
+  padding: 5px;
+  resize: none;
+  overflow: auto;
 }
 
 
@@ -158,7 +168,7 @@ textarea{
   background-color: white;
   width: 30%;
   max-width: 200px;
-  height: 500px;
+  height: auto;
   border-top-left-radius: 12px;
   border-bottom-left-radius: 12px;
 }
@@ -175,6 +185,8 @@ textarea{
 
 .btnOptions{
   /* border-radius: 0; */
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
   width: 100%;
   margin: 0;
   border-color: #ccc;
@@ -198,10 +210,12 @@ textarea{
 
 /* DIV da direita (form) */
 .containerForm {
+  display: flex;
+  flex-direction: column;
   background-color: dimgray;
-  width: 70%;
+  width: 80%;
   max-width: 700px;
-  height: 500px;
+  min-height:300px ;
   border-top-right-radius: 12px;
   border-bottom-right-radius: 12px;
   padding: 35px;
@@ -210,6 +224,11 @@ textarea{
 .containerForm2 {
   background-color: rgb(69, 68, 68);
 
+}
+
+.pizza{
+  display: flex;
+  flex-direction: row;
 }
 
 .letra-menor{

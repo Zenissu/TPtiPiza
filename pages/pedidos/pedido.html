@@ -5,35 +5,62 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pizzaria - Pedido</title>
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 
 <body>
-    <div class="container">
-        <!-- Formulário de busca de cliente -->
-        <h2>Faça seu Pedido</h2>
-        <div class="busca-cliente">
-            <label for="cliente">Nome ou Telefone do Cliente</label>
-            <input type="text" id="cliente" placeholder="Digite nome ou telefone">
-            <button id="buscar-cliente">Buscar Cliente</button>
+    <header>
+        <div class="div-logo">
+            <img src="../../imagens/logo_pizzaria.jpg" alt="logo_pizzaria">
         </div>
-
-        <!-- Se cliente for encontrado, mostra opções para selecionar pizzas -->
-        <div id="seleciona-pizzas" class="oculto">
-            <h3>Selecione as Pizzas</h3>
-            <ul id="lista-pizzas"></ul>
-
-            <!-- Lista de pizzas selecionadas -->
-            <h3>Pedido</h3>
-            <ul id="lista-pedido"></ul>
-            <p>Total: <span id="total-pedido">R$ 0,00</span></p>
-            <label for="forma-pagamento">Forma de Pagamento:</label>
-            <select id="forma-pagamento">
-                <option value="dinheiro">Dinheiro</option>
-                <option value="cartao">Cartão</option>
-                <option value="pix">PIX</option>
-            </select>
-
-            <button id="finalizar-pedido">Finalizar Pedido</button>
+        <a href="../cliente/cadastroCliente.html">
+            <div>Clientes</div>
+        </a>
+        <a href="../pizza/cadastroDePizza.html">
+            <div  >Pizzas</div>
+        </a>
+        <a href="../pedidos/pedido.html">
+            <div class="headerSelected">Pedidos</div>
+        </a>
+    </header><br>
+    <div class="containerTudo">
+        <div class="containerOptions">
+            <h1>Menu Pedidos</h1>
+            <br>
+            <div class="centralizarDivOptions">
+                <button type= "button" class="btnOptions selectedOption">Novo Pedido</button>
+                <button type= "button" class="btnOptions" onclick="window.location.href='status.html'">Status dos Pedidos</button>
+            </div>
+    
+        </div>
+        <div class="containerForm">
+            <!-- Formulário de busca de cliente -->
+            <h1>Criação de Pedido</h1><br><br><br>
+            <div class="busca-cliente">
+                <label for="cliente">Nome ou Telefone do Cliente</label>
+                <input  type="text" id="cliente" placeholder="Digite nome ou telefone"><br>
+                <button id="buscar-cliente">Buscar Cliente</button>
+                <br><br>
+            </div>
+    
+            <!-- Se cliente for encontrado, mostra opções para selecionar pizzas -->
+            <div id="seleciona-pizzas" style="display: none;">
+                
+                <ul id="lista-pizzas"></ul>
+    
+                <!-- Lista de pizzas selecionadas -->
+                <h1 class="letra-menor">Pedido</h1><br>
+                <ul id="lista-pedido"></ul><br>
+                <p><strong>Total:</strong><span id="total-pedido">R$ 0,00</span></p><br>
+                <label style="color: black;" for="forma-pagamento"><strong>Forma de Pagamento: </strong></label>
+                <select id="forma-pagamento">
+                    <option value="dinheiro">Dinheiro</option>
+                    <option value="cartao">Cartão</option>
+                    <option value="pix">PIX</option>
+                </select>
+                <br><br>
+                <button id="finalizar-pedido">Finalizar Pedido</button>
+            </div>
         </div>
     </div>
 
@@ -106,7 +133,7 @@
                 const pizzas = await response.json();
 
                 const listaPizzas = document.getElementById('lista-pizzas');
-                listaPizzas.innerHTML = '';
+                listaPizzas.innerHTML = '<hr><h1 class="letra-menor">Selecione as Pizzas</h1><br/>';
 
                 pizzas.forEach(pizza => {
                     const preco = parseFloat(pizza.preco);
@@ -118,15 +145,25 @@
                     const li = document.createElement('li');
                     li.classList.add('pizza-item');
                     li.innerHTML = `
-                    <div>
-                        <strong>${pizza.nome}</strong><br/> - <span class="preco">R$ ${preco.toFixed(2)}</span><br/>
-                        <strong>Ingredientes: ${pizza.ingredientes}</strong><br/>
-                        <img src="${pizza.nome_da_imagem}" alt="${pizza.nome}" class="pizza-imagem"/><br/>
-                        <input type="number" min="1" value="1" id="quantidade-${pizza.codigo}" class="quantidade" />
-                        <button data-pizza-id="${pizza.codigo}" class="adicionar-pedido">Adicionar ao Pedido</button>
+                    <div class="">
+                        <p><strong>${pizza.nome}</strong> - R$ ${preco.toFixed(2)}</p><br/>
+                        <div class="pizza">
+                            <img style="border-radius: 12px" width="100" height="100" src="${pizza.nome_da_imagem}" alt="${pizza.nome}" class="pizza-imagem"/>
+                            <p style="text-align: justify; margin-left: 15px;">${pizza.ingredientes}</p>
+                        </div>
+                        <div class = "pizza" style = "justify-content: flex-end;">
+                            <div style = "width: 50%"></div>    
+                            <input style="width: 45px; margin-right: 15px" type="number" min="1" max="99" value="1" id="quantidade-${pizza.codigo}" class="quantidade"/>
+                            <button data-pizza-id="${pizza.codigo}" data-pizza-nome="${pizza.nome}" data-pizza-preco="${preco}" class="adicionar-pedido">Adicionar ao Pedido</button>
+
+                        </div>
+                        <br/>
+                        <hr><br/>
                     </div>`;
                     listaPizzas.appendChild(li);
                 });
+
+                document.getElementById('seleciona-pizzas').style.display = "block";
 
                 // Adiciona evento para cada botão de adicionar
                 document.querySelectorAll('.adicionar-pedido').forEach(button => {
@@ -139,16 +176,16 @@
 
         // Função para adicionar pizza ao pedido
         function adicionarPizza(e) {
-            const pizzaId = e.target.getAttribute('data-pizza-id');
+            const button = e.target;
+            const pizzaId = button.getAttribute('data-pizza-id');
+            const pizzaNome = button.getAttribute('data-pizza-nome');
+            const pizzaPreco = parseFloat(button.getAttribute('data-pizza-preco'));
             const quantidade = parseInt(document.getElementById(`quantidade-${pizzaId}`).value);
 
-            if (quantidade <= 0) {
+            if (quantidade <= 0 || isNaN(quantidade)) {
                 alert('Quantidade inválida!');
                 return;
             }
-
-            const pizzaNome = e.target.parentElement.querySelector('strong').textContent;
-            const pizzaPreco = parseFloat(e.target.parentElement.querySelector('.preco').textContent.replace('R$ ', '').replace(',', '.'));
 
             pizzasSelecionadas.push({
                 codigo_pizza: pizzaId,
@@ -161,6 +198,7 @@
             const pedidoItem = document.createElement('li');
             pedidoItem.textContent = `${pizzaNome} - R$ ${pizzaPreco.toFixed(2)} x ${quantidade}`;
             document.getElementById('lista-pedido').appendChild(pedidoItem);
+            alert("Pizza adicionada ao pedido!");
         }
 
         // Finalizar o pedido

@@ -8,17 +8,33 @@
 </head>
 
 <body>
-    <div class="container">
-        <form class="form" id="formClient">
-            <h1>Cadastro de Cliente</h1><br><br>
+    <header>
+        <div class="div-logo">
+            <img src="../../imagens/logo_pizzaria.jpg" alt="logo_pizzaria">
+        </div>
+        <div class="headerSelected">Clientes</div>
+        <div>Pizzas</div>
+        <div>Pedidos</div>
+    </header>
+    <div class="containerTudo">
+        <div class="containerOptions">
+            <h1>Menu Clientes</h1>
+            <br>
+            <div class="centralizarDivOptions">
+                <button type= "button" class="btnOptions selectedOption">Cadastrar Novo Cliente</button>
+                <button type= "button" class="btnOptions" onclick="window.location.href='alteracaoCliente.html'">Alterar Cliente</button>
+            </div>
+
+        </div>
+        <form class="containerForm" id="formClient">
+            <h1>Cadastro de Cliente</h1><br>
             <label for="nome">Nome:</label><br><input type="text" id="nome" placeholder="Digite o nome completo do cliente" required /><br><br>
             <label for="telefone">Telefone:</label><br><input type="text" id="telefone" name="telefone" maxlength="14"
                 minlength="14" placeholder="(xx)xxxxx-xxxx" required /><br><br>
             <label for="endereco">Endereco:</label><br><input type="text" id="endereco" name="endereco" placeholder="Rua dos Ipês, 432 - São Miguel Paulista, São Paulo - SP, CEP 08010-350" required /><br><br><br>
             <p id="mensagemTelefone"></p>
             <p id="mensagem"></p>
-            <button type="submit" id="btnCadastrar"> Cadastrar </button><br><br>
-            <button type="button" class="btnVoltar" id="btnVoltar" onclick="window.location.href='index.html'"> Voltar </button>
+            <button type="submit" id="btnCadastrar"> Cadastrar </button><br>
         </form>
     </div>
     <script>

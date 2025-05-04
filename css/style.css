@@ -1,42 +1,7 @@
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
-
-.containerForm {
-  background-color: dimgray;
-  width: 100%;
-  max-width: 700px;
-  height: 500px;
-  border-top-right-radius: 12px;
-  border-bottom-right-radius: 12px;
-}
-.containerOptions {
-  background-color: white;
-    width: 100%;
-    max-width: 200px;
-    height: 500px;
-    border-top-left-radius: 12px;
-    border-bottom-left-radius: 12px;
-  }
-  
-  .containerTudo{
-  background-color: #f2f2f2;
-  max-width: px;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  gap: 0;
-  flex-wrap: wrap;
-  border-radius: 12px;
-  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
-  
-}
-
-.containerOptions, .containerForm {
-  flex: 1;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 body {
@@ -49,81 +14,9 @@ body {
   flex-direction: column;
   flex-wrap: wrap;
   gap: 0;
-  }
-
-  .form {
-    align-content: center;
-    padding: 50px;
-    border-color: black;
 }
 
-.form button:hover {
-    background-color: black;
-    color: #f2f2f2;
-  }
-
-h1{
-    text-align: center;
-    font-size: 23pt;
-    color: white;
-}
-
-label{
-  color: white;
-}
-
-div>h1{
-  color: dimgray;
-  padding-top: 50px;
-}
-
-
-input, button {
-    margin: auto; /* centraliza horizontalmente */
-    display: block;
-    border-radius: 6px;
-    padding: 5px;
-
-  }
-
-button{
-    width: 60%;
-    background-color: #f2f2f2;
-    color: black;
-    font-weight: 700;
-    cursor: pointer;
-  }
-  
-.btnOptions{
-  /* border-radius: 0; */
-    width: 100%;
-    margin: 0;
-    border-color: #ccc;
-    border-right: none;
-    border-left: none;
-    background-color: #f2f2f2;
-    color: black;
-
-}
-
-.sideoptions {
-  align-content: center;
-  background-color: white;
-  padding: 50px;
-}
-
-
-.btnVoltar{
-    width: 60%;
-    background-color: #f2f2f2;
-    color: black;
-    font-weight: 700;
-}
-
-input{
-    height: 25px;
-    width: 100%;
-  }
+/* Classes do Header */
 
 header{
   background-color: #f2f2f2;
@@ -140,6 +33,7 @@ header{
 
 header>div{
   padding: 20px;
+  justify-content: center;
   text-align: center;
   margin: 5px;
   margin-top: 20px;
@@ -147,12 +41,13 @@ header>div{
   box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.5);
   border-radius: 12px;
   cursor: pointer;
-
+  
 }
 
 header>div>img{
   width: 100px;
   height: 100px;
+  box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.5);
 }
 
 .headerSelected{
@@ -162,8 +57,161 @@ header>div>img{
   box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.5);
   
 }
-
-.no-border{
-  border: none;
-  box-shadow: none;
+.div-logo{
+  background-color: none;
+  box-shadow: none; 
 }
+
+
+
+/* DIV do Conteúdo Principal */
+
+button:hover{
+  background-color: black;
+  color: #f2f2f2;
+}
+h1{
+  text-align: center;
+  font-size: 23pt;
+  color: white;
+}
+.containerTudo{
+  background-color: #f2f2f2;
+  width: 500px;
+  height: auto;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 0;
+  flex-wrap: wrap;
+  border-radius: 12px;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+  
+}
+
+.containerTudo2{
+  width: 700px;
+  
+}
+
+
+
+div>h1{
+  color: dimgray;
+  padding-top: 50px;
+}
+form>h1{
+  color: white;
+  padding-top: 15px;
+}
+input, button {
+  margin: auto; /* centraliza horizontalmente */
+  display: block;
+  border-radius: 6px;
+  padding: 5px;
+  
+}
+
+button{
+  width: 60%;
+  background-color: #f2f2f2;
+  color: black;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+input{
+  height: 25px;
+  width: 100%;
+}
+
+
+/* DIV da esquerda (opções) */
+
+
+.containerOptions {
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  width: 30%;
+  max-width: 200px;
+  height: 500px;
+  border-top-left-radius: 12px;
+  border-bottom-left-radius: 12px;
+}
+.centralizarDivOptions{
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items:center; 
+}
+
+.containerOptions, .containerForm {
+  flex: 1;
+}
+
+.btnOptions{
+  /* border-radius: 0; */
+  width: 100%;
+  margin: 0;
+  border-color: #ccc;
+  border-right: none;
+  border-left: none;
+  background-color: #f2f2f2;
+  color: black;
+  
+}
+.selectedOption {
+  background-color: dimgray;
+  color: white;
+}
+
+.sideoptions {
+  align-content: center;
+  background-color: white;
+  padding: 50px;
+}
+
+
+/* DIV da direita (form) */
+.containerForm {
+  background-color: dimgray;
+  width: 70%;
+  max-width: 700px;
+  height: 500px;
+  border-top-right-radius: 12px;
+  border-bottom-right-radius: 12px;
+  padding: 35px;
+}
+
+.containerForm2 {
+  background-color: rgb(69, 68, 68);
+
+}
+
+.letra-menor{
+  font-size: 17pt;
+}
+
+.no-border-radius{
+  border-radius: 0;
+}
+
+label{
+  color: white;
+  font-size: 10pt;
+}
+
+input::placeholder{
+  font-size: 9pt;
+}
+
+.btnVoltar{
+    width: 60%;
+    background-color: #f2f2f2;
+    color: black;
+    font-weight: 700;
+}
+
+

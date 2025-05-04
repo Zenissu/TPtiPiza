@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+<link rel="stylesheet" href="/css/style.css">
 
 <head>
     <meta charset="UTF-8">
@@ -8,36 +9,62 @@
 </head>
 
 <body>
-    <h1>Alteração de dados do cliente:</h1>
-    <!-- Verifica o cliente pelo codigo do mesmo-->
-    <label for="buscaCodigo">Código do cliente:</label></label>
-    <input type="text" id="buscaCodigo" placeholder="Escreva aqui o codigo do cliente" required /><br><br>
-    <button onclick='buscarCliente("codigo")'>Buscar via codigo</button><br><br>
+    
+    <header>
+        <div class="div-logo">
+            <img src="../../imagens/logo_pizzaria.jpg" alt="logo_pizzaria">
+        </div>
+        <div class="headerSelected">Clientes</div>
+        <div>Pizzas</div>
+        <div>Pedidos</div>
+    </header>
+    <div class="containerTudo containerTudo2">
+        <div class="containerOptions">
+            <h1>Menu Clientes</h1>
+            <br>
+            <div class="centralizarDivOptions">
+                <button type= "button" class="btnOptions" onclick="window.location.href='cadastroCliente.html'">Cadastrar Novo Cliente</button>
+                <button type= "button" class="btnOptions selectedOption">Alterar Cliente</button>
+            </div>
 
-    <!-- Verifica pelo telefone do mesmo-->
-    <label for="buscaTelefone">Telefone do cliente:</label></label>
-    <input type="text" id="buscaTelefone" placeholder="Escreva aqui o telefone do cliente" maxlength="14" /><br><br>
-    <button onclick="buscarCliente('telefone')">Buscar via telefone</button><br><br>
+        </div>
+        <form class="containerForm no-border-radius" id="formClient">
+            <h1 class="letra-menor">Consulta de Cliente</h1><br>
+            <!-- Verifica o cliente pelo codigo do mesmo-->
+            <label for="buscaCodigo">Código do cliente:</label></label>
+            <input type="text" id="buscaCodigo" placeholder="Escreva aqui o código do cliente" required /><br>
+            <button onclick='buscarCliente("codigo")'>Buscar via código</button><br><br>
+            
+            <p style="text-align: center; color: white; font-size: small; ">-------------------ou-------------------</p>
+            <br><br>
+            <!-- Verifica pelo telefone do mesmo-->
+            <label for="buscaTelefone">Telefone do cliente:</label></label>
+            <input type="text" id="buscaTelefone" placeholder="Escreva aqui o telefone do cliente" maxlength="14" /><br>
+            <button onclick="buscarCliente('telefone')">Buscar via telefone</button><br><br>
 
-    <fieldset id="formClient" disabled>
+            
+        </form>
+        <form class="containerForm containerForm2">
+            <h1 class="letra-menor">Alterar Dados de Cliente</h1><br>
+            <label for="codigo">Código:</label>
+            <input id="codigo" readonly/><br>
+    
+            <label for="nome">Nome:</label>
+            <input type="text" id="nome" required><br>
+    
+            <label for="telefone">Telefone:</label>
+            <input type="text" id="telefone" required><br>
+    
+            <label for="endereco">Endereço:</label>
+            <input type="text" id="endereco" required><br>
+    
+            <label for="situacao">Situação:</label>
+            <input type="checkbox" id="situacao"><br>
+    
+            <button onclick="atualizarCliente()">Atualizar Cliente</button>
 
-        <label for="codigo">Código:</label>
-        <input id="codigo" readonly/><br><br>
-
-        <label for="nome">Nome:</label>
-        <input type="text" id="nome" required><br><br>
-
-        <label for="telefone">Telefone:</label>
-        <input type="text" id="telefone" required><br><br>
-
-        <label for="endereco">Endereço:</label>
-        <input type="text" id="endereco" required><br><br>
-
-        <label for="situacao">Situação:</label>
-        <input type="checkbox" id="situacao"><br><br>
-
-        <button onclick="atualizarCliente()">Atualizar Cliente</button>
-    </fieldset>
+        </form>
+    </div>
 
     <script>
         //Preenche o formulario com dados do cliente 

@@ -3,28 +3,59 @@
 <head>
   <meta charset="UTF-8">
   <title>Pedidos - Pizzaria</title>
+  <link rel="stylesheet" href="/css/style.css">
   <style>
     .status-container { margin-bottom: 40px; }
-    .pedido { border: 1px solid #ccc; padding: 10px; margin: 10px 0; }
+    .pedido { border: 1px solid #ccc; padding: 10px; margin: 10px 0; background-color: #d2d2d2; }
+    h3 {color: white;}
   </style>
 </head>
 <body>
-  <h1>Pedidos por Situação</h1>
+  <header>
+    <div class="div-logo">
+        <img src="../../imagens/logo_pizzaria.jpg" alt="logo_pizzaria">
+    </div>
+    <a href="../cliente/cadastroCliente.html">
+        <div>Clientes</div>
+    </a>
+    <a href="../pizza/cadastroDePizza.html">
+        <div  >Pizzas</div>
+    </a>
+    <a href="../pedidos/pedido.html">
+        <div class="headerSelected">Pedidos</div>
+    </a>
+</header><br>
+<div class="containerTudo">
+  <div class="containerOptions">
+    <h1>Menu Pedidos</h1>
+            <br>
+    <div class="centralizarDivOptions">
+      <button type= "button" class="btnOptions">Novo Pedido</button>
+      <button type= "button" class="btnOptions selectedOption" onclick="window.location.href='status.html'">Status dos Pedidos</button>
+    </div>
+  </div>
+  <div class="containerForm">
+    <h1>Pedidos por Situação</h1><br>
+  
+    <div class="status-container" id="aguardando">
+      <h3>Aguardando Pagamento</h3>
+      <!-- Pedidos com status aguardando -->
+    </div>
+  
+    <div class="status-container" id="preparando">
+      <h3>Em Preparação</h3>
+      <!-- Pedidos com status preparando -->
+    </div>
+  
+    <div class="status-container" id="entregue">
+      <h3>Entregues</h3>
+      <!-- Pedidos com status entregue -->
+    </div>
 
-  <div class="status-container" id="aguardando">
-    <h2>Aguardando Pagamento</h2>
-    <!-- Pedidos com status aguardando -->
   </div>
 
-  <div class="status-container" id="preparando">
-    <h2>Em Preparação</h2>
-    <!-- Pedidos com status preparando -->
-  </div>
 
-  <div class="status-container" id="entregue">
-    <h2>Entregues</h2>
-    <!-- Pedidos com status entregue -->
-  </div>
+</div>
 
   <script>
     // Função para carregar pedidos
@@ -66,7 +97,7 @@
               </select>
             </p>
             <p><strong>Pizzas:</strong></p>
-            <ul>${listaPizzas}</ul>
+            <ul style="padding-left: 40px;">${listaPizzas}</ul>
           `;
            
           container.appendChild(div);

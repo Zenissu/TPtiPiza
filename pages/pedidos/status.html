@@ -6,14 +6,15 @@
   <link rel="stylesheet" href="/css/style.css">
   <style>
     .status-container { margin-bottom: 40px; }
-    .pedido { border: 1px solid #ccc; padding: 10px; margin: 10px 0; background-color: #d2d2d2; }
+    .pedido { padding: 10px; margin: 10px 0; background-color: #4b4b4b; color: rgb(255, 255, 255); line-height: 30px;}
     h3 {color: white;}
+    select{color: white;background-color: black;}
   </style>
 </head>
 <body>
   <header>
     <div class="div-logo">
-        <img src="../../imagens/logo_pizzaria.jpg" alt="logo_pizzaria">
+        <img src="../../imagens/logo_pizzaria.png" alt="logo_pizzaria">
     </div>
     <a href="../cliente/cadastroCliente.html">
         <div>Clientes</div>
@@ -88,17 +89,17 @@
           const listaPizzas = pedido.pizzas.map(p => `<li>${p.nome} (x${p.quantidade})</li>`).join('');
 
           div.innerHTML = `
-            <p><strong>Cliente:</strong> ${pedido.cliente || 'Nome não disponível'}</p>
-            <p><strong>Valor Total:</strong> R$ ${valorTotal.toFixed(2)}</p>
-            <p><strong>Forma de Pagamento:</strong> ${pedido.forma_de_pagamento}</p>
-            <p><strong>Status:</strong>
+            <p>Cliente: ${pedido.cliente || 'Nome não disponível'}</p>
+            <p>Valor Total: R$ ${valorTotal.toFixed(2)}</p>
+            <p>Forma de Pagamento: ${pedido.forma_de_pagamento}</p>
+            <p>Status:
               <select onchange="atualizarStatus(${pedido.codigo}, this.value)">
                 <option value="aguardando" ${pedido.situacao === 'aguardando' ? 'selected' : ''}>Aguardando</option>
                 <option value="preparando" ${pedido.situacao === 'preparando' ? 'selected' : ''}>Preparando</option>
                 <option value="entregue" ${pedido.situacao === 'entregue' ? 'selected' : ''}>Entregue</option>
               </select>
             </p>
-            <p><strong>Pizzas:</strong></p>
+            <p>Pizzas:</p>
             <ul style="padding-left: 40px;">${listaPizzas}</ul>
           `;
            

@@ -6,7 +6,7 @@
 
 body {
   min-height: 100vh;
-  background-color: #f2f2f2;
+  background-color: #000000;
   font-family: Arial, sans-serif;
   display: flex;
   justify-content: center;
@@ -25,7 +25,7 @@ a {
 }
 
 header{
-  background-color: #f2f2f2;
+  background-color: #000000;
   font-family: Arial, sans-serif;
   display: flex;
   justify-content: center;
@@ -38,12 +38,13 @@ header{
 }
 
 header>a>div{
+  background-color: rgb(29, 29, 29);
   padding: 20px;
   justify-content: center;
   text-align: center;
   margin: 5px;
   margin-top: 20px;
-  color: black;
+  color: rgb(255, 255, 255);
   box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.5);
   border-radius: 12px;
   cursor: pointer;
@@ -58,7 +59,7 @@ header>div>img{
 }
 
 .headerSelected{
-  background-color: dimgray;
+  background-color: rgb(44, 44, 44);
   color: white;
   font-weight: bold;
   box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.5);
@@ -75,7 +76,7 @@ header>div>img{
 /* DIV do Conteúdo Principal */
 
 button:hover{
-  background-color: black;
+  background-color: dimgray;
   color: #f2f2f2;
 }
 h1{
@@ -95,7 +96,7 @@ h1{
   gap: 0;
   flex-wrap: wrap;
   border-radius: 12px;
-  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+  /* box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8); */
   
 }
 
@@ -109,7 +110,7 @@ h1{
 
 
 div>h1{
-  color: dimgray;
+  color: rgb(255, 255, 255);
   padding-top: 50px;
 }
 .containerForm h1{
@@ -139,8 +140,8 @@ input, button {
 
 button{
   width: 60%;
-  background-color: #f2f2f2;
-  color: black;
+  background-color: rgb(29, 29, 29);
+  color: rgb(255, 255, 255);
   font-weight: 700;
   cursor: pointer;
 }
@@ -165,7 +166,7 @@ textarea{
 .containerOptions {
   display: flex;
   flex-direction: column;
-  background-color: white;
+  background-color: rgb(29, 29, 29);
   width: 30%;
   max-width: 200px;
   height: auto;
@@ -187,19 +188,19 @@ textarea{
   border-radius: 0;
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
-  border-top-right-radius: 80px;
-  border-bottom-right-radius: 80px;
+  /* border-top-right-radius: 80px;
+  border-bottom-right-radius: 80px; */
   width: 100%;
   margin: 0;
-  border-color: #ccc;
+  /* border-color: #ccc; */
   border-right: none;
   border-left: none;
-  background-color: #f2f2f2;
-  color: black;
+  background-color: rgb(29, 29, 29);
+  color: rgb(255, 255, 255);
   
 }
 .selectedOption {
-  background-color: dimgray;
+  background-color: rgb(44, 44, 44);
   color: white;
 }
 
@@ -214,7 +215,7 @@ textarea{
 .containerForm {
   display: flex;
   flex-direction: column;
-  background-color: dimgray;
+  background-color: rgb(44, 44, 44);
   width: 80%;
   min-height:500px ;
   border-top-right-radius: 12px;
@@ -223,7 +224,7 @@ textarea{
 }
 
 .containerForm2 {
-  background-color: rgb(69, 68, 68);
+  background-color: rgb(60, 60, 60);
 
 }
 

@@ -1,15 +1,25 @@
+/*
+cd\node
+mkdir wscartao
+cd  wscartao
+npm init -y
+npm install express
+node index.js
+*/
+
 const express = require('express');
 const app = express();
 app.use(express.json());
 
-// Simula uma base de dados de cartões de créditonaç
+// Simula uma base de dados de cartões de crédito
 const cartoes = [
-  { nome: 'João Silva', numero: '1234-5678-9012-3456', saldo: 1000, limite: 2000 },
-  { nome: 'Maria Oliveira', numero: '2345-6789-0123-4567', saldo: 500, limite: 1500 },
-  { nome: 'Carlos Souza', numero: '3456-7890-1234-5678', saldo: 200, limite: 800 },
-  { nome: 'Ana Costa', numero: '4567-8901-2345-6789', saldo: 300, limite: 1200 },
-  { nome: 'Paula Pereira', numero: '1224-5678-9012-3456', saldo: 1000, limite: 2000 },
-  { nome: 'felipe', numero: '1234-5878-9012-3456', saldo: 1000, limite: 2000 },
+  { nome: "João Silva Santos", numero: '1111-2222-3333-4444', saldo: 2000, limite: 5000 },
+  { nome: "Maria Oliveira", numero: '5555-6666-7777-8888', saldo: 1000, limite: 3000 },
+  { nome: "Ana Costa", numero: '9999-0000-1111-2222', saldo: 4000, limite: 8000 },
+  { nome: "Paula Pereira", numero: '3333-4444-5555-6666', saldo: 500, limite: 2000 },
+  { nome: "Felipe", numero: '7777-8888-9999-0000', saldo: 300, limite: 1500 },
+  { nome: 'Jão das figueiras', numero: '2222-3333-4444-5555', saldo: 1000, limite: 4000 },
+  { nome: 'Pedro Sampaio', numero: '6666-7777-8888-9999', saldo: 10000, limite: 200000 },
 ];
 
 // Função para verificar se uma compra é aprovada
@@ -24,19 +34,19 @@ function aprovarCompra(cartao, valor) {
 
 // Endpoint para realizar uma compra
 app.post('/cartao/compras', (req, res) => {
-  const { nome, valor } = req.body; // Recebe o nome do cliente e o valor do pedido
-  const cartao = cartoes.find((c) => c.nome === nome); // Busca o cartão pelo nome do cliente
+    const { nome, valor } = req.body;
+    const cartao = cartoes.find((c) => c.nome === nome);
 
-  if (!cartao) {
-    return res.status(404).json({ mensagem: 'Cartão não encontrado para o cliente informado.' });
-  }
+    if (!cartao) {
+        return res.status(404).json({ mensagem: 'Cartão não encontrado para o cliente informado.' });
+    }
 
-  if (cartao.saldo >= valor) {
-    cartao.saldo -= valor; // Deduz o valor do saldo
-    return res.json({ mensagem: 'Compra aprovada', saldo: cartao.saldo });
-  } else {
-    return res.status(402).json({ mensagem: 'Compra não aprovada. Saldo insuficiente.' });
-  }
+    if (cartao.saldo >= valor) {
+        cartao.saldo -= valor;
+        return res.json({ mensagem: 'Compra aprovada', saldo: cartao.saldo });
+    } else {
+        return res.status(402).json({ mensagem: 'Compra não aprovada. Saldo insuficiente.' });
+    }
 });
 
 // Endpoint para consultar o saldo do cartão

@@ -36,8 +36,8 @@
         <form class="containerForm" id="formClient">
             <h1>Cadastro de Cliente</h1><br>
             <label for="nome">Nome:</label><br><input type="text" id="nome" placeholder="Digite o nome completo do cliente" required /><br><br>
-            <label for="telefone">Telefone:</label><br><input type="text" id="telefone" name="telefone" maxlength="14"
-                minlength="14" placeholder="(xx)xxxxx-xxxx" required /><br><br>
+            <label for="telefone">Telefone:</label><br><input type="text" id="telefone" name="telefone" maxlength="11"
+                minlength="11" placeholder="(xx)xxxxx-xxxx" required /><br><br>
             <label for="endereco">Endereco:</label><br><input type="text" id="endereco" name="endereco" placeholder="Rua dos Ipês, 432 - São Miguel Paulista, São Paulo - SP, CEP 08010-350" required /><br><br><br>
             <p style="text-align: center; font-size: small;" id="mensagemTelefone"></p>
             <p style="text-align: center; font-size: small;" id="mensagem"></p>
@@ -52,8 +52,8 @@
             const telefone = document.getElementById("telefone").value;
             const endereco = document.getElementById("endereco").value;
 
-            // Validar telefone (14 dígitos)
-            if (!/^\d{14}$/.test(telefone)) {
+            // Validar telefone (11 dígitos)
+            if (!/^\d{11}$/.test(telefone)) {
                 document.getElementById('mensagemTelefone').innerText = 'O telefone deve conter exatamente 14 números.';
                 return;
             } else {

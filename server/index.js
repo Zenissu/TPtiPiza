@@ -8,7 +8,7 @@ app.use(cors()); // inicia cors
 app.use(express.json()); // recebe json no corpo do html
 
 const db = mysql.createConnection({
-    host: '177.140.77.232',
+    host: 'localhost',
     user: 'felipe',
     password: '363784141',
     database: 'pizzaria'
@@ -101,7 +101,6 @@ app.put('/pizzas/:id', (req, res) => {
 app.post('/api/pedido', async (req, res) => {
     const { codigo_cliente, pizzas, forma_de_pagamento, data_hora_da_entrega } = req.body;
 
-    // Valida os dados recebidos
     if (!codigo_cliente || !Array.isArray(pizzas) || pizzas.length === 0) {
         return res.status(400).json({ erro: "Dados do pedido incompletos." });
     }
@@ -134,10 +133,17 @@ app.post('/api/pedido', async (req, res) => {
         // Se a forma de pagamento for "cartão", verifica o saldo no wscartao
         if (forma_de_pagamento === 'cartao') {
             try {
+                console.log("Enviando requisição para o serviço de cartão:", {
+                    nome: cliente.nome,
+                    valor: valor_total,
+                });
+
                 const resposta = await axios.post('http://localhost:8080/cartao/compras', {
                     nome: cliente.nome,
                     valor: valor_total,
                 });
+
+                console.log("Resposta do serviço de cartão:", resposta.data);
 
                 if (resposta.data.mensagem === 'Compra aprovada') {
                     situacao = 'preparando';

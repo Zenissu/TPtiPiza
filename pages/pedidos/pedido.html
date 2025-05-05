@@ -198,6 +198,14 @@
                 return;
             }
 
+            // Verifica se a pizza já foi adicionada ao pedido
+            const pizzaJaAdicionada = pizzasSelecionadas.find(pizza => pizza.codigo_pizza === pizzaId);
+            if (pizzaJaAdicionada) {
+                alert(`A pizza "${pizzaNome}" já foi adicionada ao pedido. Você só pode adicionar uma de cada tipo.`);
+                return;
+            }
+
+            // Adiciona a pizza ao pedido
             pizzasSelecionadas.push({
                 codigo_pizza: pizzaId,
                 quantidade: quantidade

@@ -8,9 +8,9 @@ app.use(cors()); // inicia cors
 app.use(express.json()); // recebe json no corpo do html
 
 const db = mysql.createConnection({
-    host: '',
-    user: '',
-    password: '',
+    host: 'localhost',
+    user: 'felipe',
+    password: '363784141',
     database: 'pizzaria'
 });
 
@@ -74,7 +74,13 @@ app.post('/pizzas', (req, res) => {
             console.error('Erro ao cadastrar pizza:', err);
             return res.status(500).send("Erro ao inserir pizza");
         }
-        res.status(201).json({ nome, ingredientes, nome_da_imagem, preco });
+        res.status(201).json({ 
+            codigo: result.insertId, // Retorna o ID gerado
+            nome, 
+            ingredientes, 
+            nome_da_imagem, 
+            preco 
+        });
     });
 });
 

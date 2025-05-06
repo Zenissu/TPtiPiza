@@ -1,11 +1,3 @@
-/*
-cd\node
-mkdir wscartao
-cd  wscartao
-npm init -y
-npm install express
-node index.js
-*/
 
 const express = require('express');
 const app = express();

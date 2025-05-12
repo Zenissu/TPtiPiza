@@ -67,10 +67,9 @@
                 <label for="pizza">Nome da pizza</label>
                 <input type="text" id="pizza" placeholder="Busque aqui uma pizza">
                 <br>
-                <button id="buscar-pizza">Buscar Pizza</button><button id="mostrar-pizzas">Catálogo</button>
+                <button id="buscar-pizza">Buscar Pizza</button>
                 <br><br>
             </div>
-
             <!-- Se cliente for encontrado, mostra opções para selecionar pizzas -->
             <div class="centraliza" id="seleciona-pizzas" style="display: none;">
 
@@ -99,7 +98,6 @@
 
         document.getElementById('buscar-cliente').addEventListener('click', buscarCliente);
         document.getElementById('buscar-pizza').addEventListener('click', buscarPizza);
-        document.getElementById('mostrar-pizzas').addEventListener('click', carregarPizzas);
 
         // Função para buscar o cliente
         async function buscarCliente() {
@@ -364,6 +362,53 @@
             } catch (error) {
                 console.error('Erro ao finalizar pedido:', error);
                 alert('Erro ao finalizar o pedido.');
+            }
+        });
+
+        document.getElementById('pizza').addEventListener('input', async function () {
+            const pizzaInput = this.value.trim();
+
+            try {
+                // Faz a requisição ao backend com o nome da pizza (ou vazio para buscar todas)
+                const response = await fetch(`http://localhost:3000/pizzas?nome=${pizzaInput}`);
+                const pizzas = await response.json();
+
+                const listaPizzas = document.getElementById('lista-pizzas');
+                listaPizzas.innerHTML = '<hr><h1 class="letra-menor">Selecione as Pizzas</h1><br/>';
+
+                if (pizzas.length === 0) {
+                    listaPizzas.innerHTML += '<p>Nenhuma pizza encontrada.</p>';
+                } else {
+                    pizzas.forEach(pizza => {
+                        const preco = parseFloat(pizza.preco);
+                        const li = document.createElement('li');
+                        li.classList.add('pizza-item');
+                        li.innerHTML = `
+                    <div class="largura-item">
+                        <p><strong>${pizza.nome}</strong> - R$ ${preco.toFixed(2)}</p><br/>
+                        <div class="pizza">
+                            <img style="border-radius: 12px" width="100" height="100" src="${pizza.nome_da_imagem}" alt="${pizza.nome}" class="pizza-imagem"/>
+                            <p style=" margin-left: 15px;">${pizza.ingredientes}</p>
+                        </div>
+                        <div class="pizza" style="justify-content: flex-end;">
+                            <div style="width: 50%"></div>    
+                            <input style="width: 45px; margin-right: 15px" type="number" min="1" max="99" value="1" id="quantidade-${pizza.codigo}" class="quantidade"/>
+                            <button data-pizza-id="${pizza.codigo}" data-pizza-nome="${pizza.nome}" data-pizza-preco="${preco}" class="adicionar-pedido">Adicionar ao Pedido</button>
+                        </div>
+                        <br/>
+                        <hr><br/>
+                    </div>`;
+                        listaPizzas.appendChild(li);
+                    });
+
+                    // Adiciona evento para cada botão de adicionar
+                    document.querySelectorAll('.adicionar-pedido').forEach(button => {
+                        button.addEventListener('click', adicionarPizza);
+                    });
+                }
+            } catch (error) {
+                console.error('Erro ao buscar pizzas:', error);
+                alert('Erro ao buscar pizzas.');
             }
         });
     </script>

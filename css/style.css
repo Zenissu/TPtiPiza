@@ -6,7 +6,11 @@
 
 body {
   min-height: 100vh;
-  background-color: #d2d2d2;
+  background-image: url('../imagens/toalha.jpg'); /* caminho da imagem */
+  background-size: cover;              /* cobre toda a área */
+  background-position: center;         /* centraliza a imagem */
+  background-repeat: no-repeat;        /* evita repetição */
+  /* background-color: rgba(0, 90, 12, 0.521); */
   font-family: Arial, sans-serif;
   display: flex;
   justify-content: center;
@@ -48,6 +52,7 @@ header>a>div{
   /* box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.5); */
   border-radius: 12px;
   cursor: pointer;
+  border: solid 1px ;
   
 }
 
@@ -263,4 +268,14 @@ input::placeholder{
     font-weight: 700;
 }
 
+.catalogo{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  background-color: rgb(255, 255, 255);
+  width: 80%;
+  min-height:500px ;
+  border-top-right-radius: 12px;
+  border-bottom-right-radius: 12px;
+  padding: 35px;
+}
 

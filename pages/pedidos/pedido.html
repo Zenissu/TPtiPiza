@@ -7,17 +7,18 @@
     <title>Pizzaria - Pedido</title>
     <link rel="stylesheet" href="/css/style.css">
     <style>
-        .largura-item{
+        .largura-item {
             width: 300px;
         }
-        ul{
+
+        ul {
             list-style-type: none;
             color: white;
         }
-        img{
+
+        img {
             box-shadow: 0 2px 8px rgba(1, 1, 0, 2);
         }
-      
     </style>
 </head>
 
@@ -30,7 +31,7 @@
             <div>Clientes</div>
         </a>
         <a href="../pizza/cadastroDePizza.html">
-            <div  >Pizzas</div>
+            <div>Pizzas</div>
         </a>
         <a href="../pedidos/pedido.html">
             <div class="headerSelected">Pedidos</div>
@@ -41,28 +42,43 @@
             <h1>Menu Pedidos</h1>
             <br>
             <div class="centralizarDivOptions">
-                <button type= "button" class="btnOptions selectedOption" onclick="window.location.href='../pedidos/pedido.html'">Novo Pedido</button>
-                <button type= "button" class="btnOptions" onclick="window.location.href='status.html'">Status dos Pedidos</button>
-                <button type= "button" class="btnOptions" onclick="window.location.href='../consultas/consultarPedidosAnteriores.html'">Pedidos Finalizados</button>
-                <button type= "button" class="btnOptions" onclick="window.open('../consultas/pedidosEmAndamento.html', '_blank')">Pedidos em Andamento</button>
+                <button type="button" class="btnOptions selectedOption"
+                    onclick="window.location.href='../pedidos/pedido.html'">Novo Pedido</button>
+                <button type="button" class="btnOptions" onclick="window.location.href='status.html'">Status dos
+                    Pedidos</button>
+                <button type="button" class="btnOptions"
+                    onclick="window.location.href='../consultas/consultarPedidosAnteriores.html'">Pedidos
+                    Finalizados</button>
+                <button type="button" class="btnOptions"
+                    onclick="window.open('../consultas/pedidosEmAndamento.html', '_blank')">Pedidos em
+                    Andamento</button>
             </div>
-    
+
         </div>
         <div class="containerForm">
             <!-- Formulário de busca de cliente -->
             <h1>Criação de Pedido</h1><br><br><br>
             <div class="busca-cliente">
                 <label for="cliente">Nome ou Telefone do Cliente</label>
-                <input  type="text" id="cliente" placeholder="Digite nome ou telefone"><br>
+                <input type="text" id="cliente" placeholder="Digite nome ou telefone"><br>
                 <button id="buscar-cliente">Buscar Cliente</button>
                 <br><br>
             </div>
-    
+
+            <!--Busca Pizza-->
+            <div class="busca-de-pizza">
+                <label for="pizza">Nome da pizza</label>
+                <input type="text" id="pizza" placeholder="Busque aqui uma pizza">
+                <br>
+                <button id="buscar-pizza">Buscar Pizza</button><button id="mostrar-pizzas">Catalogo</button>
+                <br><br>
+            </div>
+
             <!-- Se cliente for encontrado, mostra opções para selecionar pizzas -->
-            <div class = "centraliza" id="seleciona-pizzas" style="display: none;">
-                
+            <div class="centraliza" id="seleciona-pizzas" style="display: none;">
+
                 <ul id="lista-pizzas"></ul>
-    
+
                 <!-- Lista de pizzas selecionadas -->
                 <h1 class="letra-menor">Pedido</h1><br>
                 <ul id="lista-pedido"></ul><br>
@@ -85,19 +101,21 @@
         let codigoCliente = null;  // Armazena o código do cliente
 
         document.getElementById('buscar-cliente').addEventListener('click', buscarCliente);
+        document.getElementById('buscar-pizza').addEventListener('click', buscarPizza);
+        document.getElementById('mostrar-pizzas').addEventListener('click', carregarPizzas);
 
         // Função para buscar o cliente
         async function buscarCliente() {
             const clienteInput = document.getElementById('cliente').value.trim();
-        
+
             if (!clienteInput) {
                 alert('Por favor, insira o nome ou telefone do cliente.');
                 return;
             }
-        
+
             // Limpa o código do cliente antes de buscar um novo
             codigoCliente = null;
-        
+
             try {
                 let url = '';
                 if (/^\d{14}$/.test(clienteInput)) {
@@ -107,10 +125,10 @@
                     // Caso seja nome, tenta buscar por nome
                     url = `http://localhost:3000/clientes?nome=${clienteInput}`;
                 }
-        
+
                 const response = await fetch(url);
                 const clientes = await response.json();
-        
+
                 if (clientes.length === 0) {
                     alert('Cliente não encontrado. Verifique o nome ou telefone e tente novamente.');
                 } else {
@@ -123,7 +141,7 @@
                         // Se for um nome, procura o cliente com o nome exato
                         clienteEncontrado = clientes.find(c => c.nome.toLowerCase() === clienteInput.toLowerCase());
                     }
-        
+
                     if (clienteEncontrado) {
                         // Armazena o código do cliente encontrado
                         codigoCliente = clienteEncontrado.codigo;
@@ -139,7 +157,61 @@
                 alert('Erro ao buscar cliente.');
             }
         }
-        
+
+        // Função para buscar a pizza
+        async function buscarPizza() {
+            const getPizza = document.getElementById('pizza').value.trim();
+
+            if (!getPizza) {
+                alert('Por favor, insira um nome de pizza.')
+                return;
+            }
+
+            try {
+                const response = await fetch(`http://localhost:3000/pizzas?nome=${getPizza}`);
+                const pizzas = await response.json();
+
+                const listaPizzas = document.getElementById('lista-pizzas');
+                listaPizzas.innerHTML = '';
+
+                if (pizzas.length === 0) {
+                    alert('Pizza não encontrada.')
+                } else {
+                    pizzas.forEach(pizza => {
+                        const preco = parseFloat(pizza.preco);
+                        const li = document.createElement('li');
+                        li.classList.add('pizza-item');
+                        li.innerHTML = `
+                    <div class="largura-item">
+                        <p><strong>${pizza.nome}</strong> - R$ ${preco.toFixed(2)}</p><br/>
+                        <div class="pizza">
+                            <img style="border-radius: 12px" width="100" height="100" src="${pizza.nome_da_imagem}" alt="${pizza.nome}" class="pizza-imagem"/>
+                            <p style=" margin-left: 15px;">${pizza.ingredientes}</p>
+                        </div>
+                        <div class="pizza" style="justify-content: flex-end;">
+                            <div style="width: 50%"></div>    
+                            <input style="width: 45px; margin-right: 15px" type="number" min="1" max="99" value="1" id="quantidade-${pizza.codigo}" class="quantidade"/>
+                            <button data-pizza-id="${pizza.codigo}" data-pizza-nome="${pizza.nome}" data-pizza-preco="${preco}" class="adicionar-pedido">Adicionar ao Pedido</button>
+                        </div>
+                        <br/>
+                        <hr><br/>
+                    </div>`;
+                        listaPizzas.appendChild(li);
+
+                    });
+
+                    //Coloca o botão de adicionar pizza
+                    document.querySelectorAll('.adicionar-pedido').forEach(button => {
+                        button.addEventListener('click', adicionarPizza);
+                    });
+                }
+
+            } catch (error) {
+                console.error('Erro ao buscar pizza:', error);
+                alert('Erro ao buscar pizza.');
+            }
+        }
+
 
         // Função para carregar as pizzas
         async function carregarPizzas() {
@@ -152,11 +224,6 @@
 
                 pizzas.forEach(pizza => {
                     const preco = parseFloat(pizza.preco);
-                    if (isNaN(preco)) {
-                        console.error('Preço inválido para a pizza:', pizza.nome);
-                        return;
-                    }
-
                     const li = document.createElement('li');
                     li.classList.add('pizza-item');
                     li.innerHTML = `
@@ -212,16 +279,46 @@
             // Adiciona a pizza ao pedido
             pizzasSelecionadas.push({
                 codigo_pizza: pizzaId,
-                quantidade: quantidade
+                quantidade: quantidade,
+                preco: pizzaPreco
             });
 
             total += pizzaPreco * quantidade;
             document.getElementById('total-pedido').textContent = `R$ ${total.toFixed(2)}`;
 
             const pedidoItem = document.createElement('li');
-            pedidoItem.textContent = `${pizzaNome} - R$ ${pizzaPreco.toFixed(2)} x ${quantidade}`;
+            pedidoItem.setAttribute('data-pizza-id', pizzaId);
+            pedidoItem.innerHTML = `
+                ${pizzaNome} - R$ ${pizzaPreco.toFixed(2)} x ${quantidade}
+                <button class="remover-pedido" data-pizza-id="${pizzaId}" data-pizza-preco="${pizzaPreco}" data-quantidade="${quantidade}">Remover</button>
+            `;
             document.getElementById('lista-pedido').appendChild(pedidoItem);
+
+            // Adiciona evento ao botão "Remover"
+            pedidoItem.querySelector('.remover-pedido').addEventListener('click', removerPizza);
+
             alert("Pizza adicionada ao pedido!");
+        }
+
+        function removerPizza(e) {
+            const button = e.target;
+            const pizzaCodigo = button.getAttribute('data-pizza-id');
+            const pizzaPreco = parseFloat(button.getAttribute('data-pizza-preco'));
+            const quantidade = parseInt(button.getAttribute('data-quantidade'));
+
+            //Procurar a pizza e a retira do pedido
+            pizzasSelecionadas = pizzasSelecionadas.filter(pizza => pizza.codigo_pizza !== pizzaCodigo);
+
+            //Subtrai do total
+            total -= pizzaPreco * quantidade;
+            document.getElementById('total-pedido').textContent = `R$ ${total.toFixed(2)}`;
+
+            //Remove a pizza da lista de pedidos
+            const pedidoItem = document.querySelector(`li[data-pizza-id="${pizzaCodigo}"]`);
+            if (pedidoItem) {
+                pedidoItem.remove()
+            }
+            alert("Pizza removida do pedido!");
         }
 
         // Finalizar o pedido
@@ -257,14 +354,16 @@
 
                 const result = await response.json();
 
-                if (result.sucesso) {
+                if (response.ok && result.sucesso) {
                     alert(`Pedido realizado com sucesso! Código do pedido: ${result.codigo_pedido}`);
                     pizzasSelecionadas = [];
                     total = 0;
                     document.getElementById('total-pedido').textContent = 'R$ 0,00';
                     document.getElementById('lista-pedido').innerHTML = '';
+                } else if (response.status === 402) {
+                    alert(result.erro); // Exibe "Saldo insuficiente."
                 } else {
-                    alert('Erro ao realizar o pedido.');
+                    alert(result.erro || 'Erro ao finalizar o pedido.');
                 }
             } catch (error) {
                 console.error('Erro ao finalizar pedido:', error);

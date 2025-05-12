@@ -10,7 +10,7 @@ app.use(express.json()); // recebe json no corpo do html
 const db = mysql.createConnection({
     host: 'localhost',
     user: 'felipe',
-    password: '00000000',
+    password: '363784141',
     database: 'pizzaria'
 });
 
@@ -139,26 +139,23 @@ app.post('/api/pedido', async (req, res) => {
         // Se a forma de pagamento for "cartão", verifica o saldo no wscartao
         if (forma_de_pagamento === 'cartao') {
             try {
-                console.log("Enviando requisição para o serviço de cartão:", {
-                    nome: cliente.nome,
-                    valor: valor_total,
-                });
-
                 const resposta = await axios.post('http://localhost:8080/cartao/compras', {
                     nome: cliente.nome,
                     valor: valor_total,
                 });
 
-                console.log("Resposta do serviço de cartão:", resposta.data);
-
                 if (resposta.data.mensagem === 'Compra aprovada') {
                     situacao = 'preparando';
                 } else {
-                    return res.status(402).json({ erro: 'Pagamento não aprovado. Saldo insuficiente.' });
+                    return res.status(402).json({ erro: 'Saldo insuficiente.' });
                 }
             } catch (error) {
+                if (error.response && error.response.status === 402) {
+                    // Trata especificamente o erro 402 retornado pelo serviço de cartão
+                    return res.status(402).json({ erro: 'Saldo insuficiente.' });
+                }
                 console.error('Erro ao processar pagamento com cartão:', error.message);
-                return res.status(500).json({ erro: 'Erro ao processar pagamento com cartão.', detalhes: error.message });
+                return res.status(500).json({ erro: 'Erro ao processar pagamento com cartão.' });
             }
         }
 
@@ -387,12 +384,22 @@ app.get('/clientes', (req, res) => {
 
 // Lista todas as pizzas
 app.get('/pizzas', (req, res) => {
-    const sql = 'SELECT * FROM pizza';
-    db.query(sql, (err, results) => {
+    const { nome } = req.query;
+
+    let sql = 'SELECT * FROM pizza WHERE situacao = true';
+    const params = [];
+
+    if (nome) {
+        sql += ' AND nome LIKE ?';
+        params.push(`%${nome}%`);
+    }
+
+    db.query(sql, params, (err, results) => {
         if (err) {
             console.error('Erro ao buscar pizzas:', err);
-            return res.status(500).send("Erro ao buscar pizzas");
+            return res.status(500).json({ erro: 'Erro ao buscar pizzas.' });
         }
-        res.status(200).json(results);
+
+        res.json(results);
     });
 });

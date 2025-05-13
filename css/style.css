@@ -223,7 +223,6 @@ textarea{
 .containerForm {
   display: flex;
   justify-content: center;
-  align-items: center;
   flex-direction: column;
   background-color: rgb(255, 255, 255);
   width: 80%;
@@ -322,3 +321,4 @@ input::placeholder{
 .item-pedido{
   width:33%;
 }
+

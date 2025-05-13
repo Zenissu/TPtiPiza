@@ -21,7 +21,6 @@
             border-radius: 8px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             padding: 20px;
-            width: 500px;
             text-align: center;
         }
 
@@ -56,13 +55,22 @@
             color: red;
             margin-top: 20px;
         }
+
+        #pedidos-list {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); /* Define 3 colunas */
+            gap: 20px; /* Espaçamento entre os itens */
+            margin: 20px auto; /* Centraliza horizontalmente */
+            max-width: 800px; /* Limita a largura total */
+        }
+
     </style>
 </head>
 <body>
 
     <div class="container">
         <h1>Pedidos em Andamento</h1>
-        <div id="pedidos-list"></div>
+        <div class="catalogo" id="pedidos-list"></div>
         <div class="error" id="error"></div>
     </div>
 
@@ -89,6 +97,7 @@ function atualizarPedidos() {
                 data.forEach(pedido => {
                     const pedidoDiv = document.createElement('div');
                     pedidoDiv.classList.add('pedido');
+                    pedidoDiv.classList.add('catalogo');
                     pedidoDiv.innerHTML = `
                         <strong>Pedido #${pedido.numero}</strong><br>
                         Cliente: ${pedido.cliente}<br>

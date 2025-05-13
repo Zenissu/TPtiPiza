@@ -52,7 +52,7 @@
             </div>
 
         </div>
-        <div class="containerForm">
+        <div class="containerForm centralizar">
             <!-- Formulário de busca de cliente -->
             <h1>Criação de Pedido</h1><br><br><br>
             <div class="busca-cliente">
@@ -187,7 +187,7 @@
                         const li = document.createElement('li');
                         li.classList.add('pizza-item');
                         li.innerHTML = `
-                    <div class="largura-item">
+                    <div class="largura-item" ">
                         <p><strong>${pizza.nome}</strong> - R$ ${preco.toFixed(2)}</p><br/>
                         <div class="pizza">
                             <img style="border-radius: 12px" width="100" height="100" src="${pizza.nome_da_imagem}" alt="${pizza.nome}" class="pizza-imagem"/>

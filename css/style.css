@@ -92,7 +92,7 @@ h1{
 }
 .containerTudo{
   background-color: #f2f2f2;
-  max-width: 1000px;
+  max-width: 1800px;
   height: auto;
   margin: 0 auto;
   display: flex;
@@ -222,6 +222,8 @@ textarea{
 /* DIV da direita (form) */
 .containerForm {
   display: flex;
+  justify-content: center;
+  align-items: center;
   flex-direction: column;
   background-color: rgb(255, 255, 255);
   width: 80%;
@@ -270,12 +272,53 @@ input::placeholder{
 
 .catalogo{
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
   background-color: rgb(255, 255, 255);
-  width: 80%;
   min-height:500px ;
   border-top-right-radius: 12px;
   border-bottom-right-radius: 12px;
   padding: 35px;
 }
 
+.busca-cliente{
+  width: 400px;
+}
+
+.busca-de-pizza{
+  width: 400px;
+}
+
+.centralizar{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.em-coluna{
+  display: flex;
+  flex-direction: column;
+}
+.em-linha{
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+}
+
+.borda{
+  border: solid 1px;
+  padding: 20px;
+}
+
+.borda-direita{
+  border-right: solid 1px;
+}
+
+.arredondada{
+  border-radius: 12px;
+}
+
+.item-pedido{
+  width:33%;
+}
